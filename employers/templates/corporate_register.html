@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Registration | Percept Placements</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --navy: #111827;
+            --navy-mid: #1e293b;
+            --blue: #2563eb;
+            --cream: #f3f6f9;
+            --offwhite: #f8fafc;
+            --border: #e2e8f0;
+            --corp-green: #0f5132;
+            --corp-green-light: #198754;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: #475569;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 5vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .brand-logo { max-height: 38px; width: auto; object-fit: contain; flex-shrink: 0; }
+        .nav-brand-text { font-weight: 800; font-size: 1.15rem; color: var(--navy); text-transform: uppercase; letter-spacing: -0.5px; }
+        .nav-back { color: var(--muted); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: 0.2s; }
+        .nav-back:hover { color: var(--blue); }
+
+        /* ── PAGE HEADER (Hero Gradient) ── */
+        .page-header {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--corp-green) 100%);
+            padding: 80px 20px 120px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        .page-header h1 { font-weight: 800; font-size: 2.2rem; letter-spacing: -0.5px; margin-bottom: 10px; }
+        .page-header p { font-size: 1.1rem; opacity: 0.85; font-weight: 400; max-width: 600px; margin: 0 auto; }
+
+        /* ── STACKED CARD LAYOUT ── */
+        .form-container {
+            max-width: 850px;
+            margin: -70px auto 50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: box-shadow 0.3s ease;
+        }
+        .section-card:hover { box-shadow: 0 15px 35px rgba(0,0,0,0.06); }
+
+        .card-title-wrap {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--offwhite);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+        .card-title-icon {
+            width: 45px; height: 45px;
+            background: rgba(25, 135, 84, 0.1);
+            color: var(--corp-green-light);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; margin-right: 15px;
+        }
+        .card-title-text {
+            font-size: 1.15rem; font-weight: 800; color: var(--navy); margin: 0; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        /* ── FORM ELEMENTS ── */
+        .form-label {
+            font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #64748b; margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            padding: 12px 16px; border-radius: 10px; background-color: var(--offwhite); border: 1px solid var(--border); font-size: 0.95rem; color: var(--navy); transition: all 0.2s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #fff; border-color: var(--corp-green-light); box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.1);
+        }
+
+        /* Custom Checkboxes */
+        .spec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+        .form-check-custom {
+            border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; transition: 0.2s; cursor: pointer; display: flex; align-items: center;
+        }
+        .form-check-custom:hover { background: var(--offwhite); border-color: #cbd5e1; }
+        .form-check-custom input { margin-top: 0; margin-right: 12px; cursor: pointer; }
+        .form-check-custom label { margin: 0; font-weight: 500; font-size: 0.9rem; cursor: pointer; flex-grow: 1; color: var(--navy); }
+        .form-check-custom input:checked { background-color: var(--corp-green-light); border-color: var(--corp-green-light); }
+
+        /* Submit Button Card */
+        .submit-card { background: transparent; border: none; box-shadow: none; padding: 0; margin-top: 30px; }
+        .btn-success-custom {
+            background: var(--corp-green-light); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 1.1rem; transition: all 0.3s ease; letter-spacing: 0.5px;
+        }
+        .btn-success-custom:hover { background: var(--corp-green); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(25, 135, 84, 0.2); color: white; }
+
+        /* ── FOOTER ── */
+        footer { background: transparent; padding: 30px 5vw; text-align: center; }
+        .footer-copy { font-size: 0.85rem; font-weight: 500; color: #94a3b8; margin: 0;}
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a class="nav-brand" href="/">
+            <img src="{% static 'img/percept_logo.png' %}" alt="Logo" class="brand-logo" onerror="this.style.display='none';">
+            <span class="nav-brand-text">Percept Placements</span>
+        </a>
+        <a href="{% url 'login' %}" class="nav-back"><i class="fas fa-arrow-left me-2"></i>Back to Login</a>
+    </nav>
+
+    <div class="page-header">
+        <h1>Corporate Registration</h1>
+        <p>Hire elite CA talent for your Finance, Audit, and Compliance teams across India.</p>
+    </div>
+
+    <div class="container form-container">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} border-0 border-start border-4 border-success shadow-sm fw-medium py-3 rounded-3 mb-4 bg-white">
+                    <i class="fas fa-info-circle me-2 text-success"></i> {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="section-card">
+                <div class="card-title-wrap">
+                    <div class="card-title-icon"><i class="bi bi-building"></i></div>
+                    <h3 class="card-title-text">Company Details</h3>
+                </div>
+                <div class="row g-4">
+                    <div class="col-12">
+                        <label class="form-label">Company Name</label>
+                        <input type="text" class="form-control" name="name" placeholder="e.g. Reliance Industries Ltd." required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" name="phonenumber" placeholder="Enter Mobile Number" pattern="[0-9]{10}" maxlength="10" minlength="10" title="Please enter exactly 10 digits" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Registration / CIN</label>
+                        <input type="text" class="form-control" name="registration_number" placeholder="L17110MH1973PLC019786" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">City / Area</label>
+                        <input type="text" class="form-control" name="city_area" placeholder="e.g. Cyber City, Gurugram" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Complete Address</label>
+                        <input type="text" class="form-control" name="address" placeholder="Enter your full office address" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">About Company</label>
+                        <textarea class="form-control" name="about" rows="3" placeholder="Brief description of the company..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="card-title-wrap">
+                    <div class="card-title-icon"><i class="bi bi-diagram-3"></i></div>
+                    <h3 class="card-title-text">Industry Domains</h3>
+                </div>
+                <p class="text-muted small mb-3">Select the industries your company operates in:</p>
+                <div class="spec-grid">
+                    <label class="form-check-custom">
+                        <input class="form-check-input" type="checkbox" name="industry_domains" value="Manufacturing & Engineering">
+                        <span>Manufacturing & Engineering</span>
+                    </label>
+                    <label class="form-check-custom">
+                        <input class="form-check-input" type="checkbox" name="industry_domains" value="IT / ITES">
+                        <span>IT / ITES / SaaS</span>
+                    </label>
+                    <label class="form-check-custom">
+                        <input class="form-check-input" type="checkbox" name="industry_domains" value="BFSI">
+                        <span>Banking & Financial Services</span>
+                    </label>
+                    <label class="form-check-custom">
+                        <input class="form-check-input" type="checkbox" name="industry_domains" value="FMCG & Retail">
+                        <span>FMCG & Retail</span>
+                    </label>
+                    <label class="form-check-custom">
+                        <input class="form-check-input" type="checkbox" name="industry_domains" value="Real Estate & Infrastructure">
+                        <span>Real Estate & Infra</span>
+                    </label>
+                    <label class="form-check-custom">
+                        <input class="form-check-input" type="checkbox" name="industry_domains" value="Startups & New-Age">
+                        <span>Startups & New-Age</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="card-title-wrap">
+                    <div class="card-title-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                    <h3 class="card-title-text">Role Requirements</h3>
+                </div>
+                <p class="text-muted small mb-3">What kind of CA expertise are you generally looking for?</p>
+                <div class="spec-grid">
+                    <label class="form-check-custom">
+                        <input class="form-check-input" type="checkbox" name="finance_exposure" value="Costing / MIS / Inventory">
+                        <span>Costing / MIS / Inventory</span>
+                    </label>
+                    <label class="form-check-custom">
+                        <input class="form-check-input" type="checkbox" name="finance_exposure" value="Revenue / FP&A">
+                        <span>FP&A</span>
+                    </label>
+                    <label class="form-check-custom">
+                        <input class="form-check-input" type="checkbox" name="finance_exposure" value="Credit Risk / Treasury">
+                        <span>Credit Risk / Treasury</span>
+                    </label>
+                    <label class="form-check-custom">
+                        <input class="form-check-input" type="checkbox" name="finance_exposure" value="Supply Chain Finance">
+                        <span>Supply Chain Finance</span>
+                    </label>
+                    <label class="form-check-custom">
+                        <input class="form-check-input" type="checkbox" name="finance_exposure" value="Project / RERA">
+                        <span>Project Finance / RERA</span>
+                    </label>
+                    <label class="form-check-custom">
+                        <input class="form-check-input" type="checkbox" name="finance_exposure" value="Fundraising Support">
+                        <span>Fundraising / IPO Support</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="card-title-wrap">
+                    <div class="card-title-icon"><i class="bi bi-briefcase"></i></div>
+                    <h3 class="card-title-text">Hiring Scope</h3>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Hiring Type <span class="text-danger">*</span></label>
+                        <select class="form-select" name="hiring_type" required>
+                            <option value="">Select...</option>
+                            <option value="Permanent">Permanent</option>
+                            <option value="Contractual">Contractual</option>
+                            <option value="Internship">Internship</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Active Openings</label>
+                        <input type="number" class="form-control" name="jobs_available" placeholder="e.g. 2">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Primary Work Model</label>
+                        <select class="form-select" name="work_model">
+                            <option value="Onsite">On-site (Office)</option>
+                            <option value="Hybrid">Hybrid</option>
+                            <option value="Remote">Remote</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-center bg-light p-3 border rounded-3 mt-2">
+                            <div class="form-check form-switch mb-0 d-flex align-items-center">
+                                <input class="form-check-input me-3" type="checkbox" name="ca_hiring" id="caHiring" checked style="width: 2.5em; height: 1.3em; cursor: pointer;">
+                                <div>
+                                    <label class="form-check-label fw-bold text-dark d-block" for="caHiring">We are actively hiring Chartered Accountants</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="card-title-wrap">
+                    <div class="card-title-icon"><i class="bi bi-shield-lock"></i></div>
+                    <h3 class="card-title-text">Login Credentials</h3>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Official Email (Username)</label>
+                        <input type="email" class="form-control" name="email" placeholder="hr@company.com" required>
+                        <small class="text-muted mt-1 d-block" style="font-size: 0.75rem;">We verify corporate domains for trust.</small>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Mobile Number</label>
+                        <input type="text" class="form-control" name="mobile_number" placeholder="e.g. 9876543210" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Secure Password</label>
+                        <input type="password" class="form-control" name="password" placeholder="Create a strong password" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="submit-card">
+                <button type="submit" class="btn-success-custom w-100 shadow-lg">
+                    Register Corporate Profile <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <footer>
+        <p class="footer-copy">&copy; 2026 Percept Placements. Corporate hiring aligned with ICAI ecosystem.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

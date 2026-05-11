@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percept Placements — Premier CA Recruitment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --navy: #111827;
+            --navy-mid: #1e293b;
+            --blue: #2563eb;
+            --blue-light: #3b82f6;
+            --cream: #f3f6f9;
+            --offwhite: #f8fafc;
+            --text: #475569;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --white: #ffffff;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--white);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 5vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+        }
+
+        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .brand-logo { max-height: 42px; width: auto; object-fit: contain; }
+        .nav-brand-text { font-weight: 800; font-size: 1.25rem; color: var(--navy); letter-spacing: -0.5px; text-transform: uppercase; }
+
+        .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.95rem; font-weight: 600; padding: 7px 14px; border-radius: 8px; transition: all 0.2s; }
+        .nav-links a:hover { color: var(--blue); background: var(--offwhite); }
+
+        .nav-cta { background: var(--blue) !important; color: var(--white) !important; border-radius: 8px !important; padding: 8px 20px !important; font-weight: 600 !important; transition: background 0.2s !important; }
+        .nav-cta:hover { background: var(--blue-light) !important; }
+
+        .nav-divider { width: 1px; height: 18px; background: var(--border); margin: 0 8px; }
+
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; border: none; background: none; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--navy); border-radius: 2px; transition: all 0.3s; }
+
+        /* ── HERO ── */
+        .hero {
+            background: var(--cream);
+            padding: 40px 5vw 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -120px; right: -120px;
+            width: 500px; height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--white);
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            border-radius: 100px;
+            padding: 6px 24px 6px 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hero-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.2);
+        }
+
+        .hero-badge .icon-glow {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--blue), #60a5fa);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
+            animation: pulse-glow 2s infinite;
+        }
+
+        .hero-badge .tagline-text {
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            background: linear-gradient(90deg, var(--navy), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(37, 99, 235, 0.3); transform: scale(1); }
+            50% { box-shadow: 0 0 20px rgba(37, 99, 235, 0.6); transform: scale(1.05); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.4rem, 4vw, 3.6rem);
+            font-weight: 800;
+            line-height: 1.15;
+            color: var(--navy);
+            margin-bottom: 22px;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 em { font-style: normal; color: var(--blue); }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            color: var(--muted);
+            line-height: 1.7;
+            max-width: 480px;
+            margin-bottom: 36px;
+            font-weight: 500;
+        }
+
+        .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+        .btn-primary {
+            background: var(--blue);
+            color: var(--white);
+            padding: 13px 28px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid var(--blue);
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-light);
+            border-color: var(--blue-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37,99,235,0.25);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background: var(--white);
+            color: var(--navy);
+            padding: 13px 28px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: 2px solid var(--border);
+            transition: all 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-outline:hover { border-color: var(--navy); color: var(--navy); }
+
+        .hero-right { display: flex; flex-direction: column; align-items: flex-end; position: relative; }
+
+        .hero-card-stack {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            margin-bottom: 16px;
+        }
+
+        .hero-card-stack h3 { font-weight: 800; font-size: 1.4rem; color: var(--navy); margin-bottom: 6px; letter-spacing: -0.5px; }
+        .hero-card-stack p { color: var(--muted); font-size: 0.95rem; margin-bottom: 24px; }
+
+        .specialisms { display: flex; flex-wrap: wrap; gap: 8px; }
+        .spec-tag { background: var(--cream); border: 1px solid var(--border); color: var(--navy); padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; }
+
+        .hero-floating-stat {
+            background: var(--navy);
+            color: white;
+            border-radius: 16px;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .hero-floating-stat .icon {
+            width: 46px; height: 46px;
+            background: rgba(37,99,235,0.2);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            color: var(--blue-light);
+            flex-shrink: 0;
+        }
+
+        .hero-floating-stat .num { font-weight: 800; font-size: 1.5rem; color: white; line-height: 1; }
+        .hero-floating-stat .lbl { font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+        /* ── STATS BAR ── */
+        .stats-bar { background: var(--navy); padding: 52px 5vw; }
+        .stats-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; max-width: 1100px; margin: 0 auto; }
+        .stat-item { text-align: center; padding: 0 20px; border-right: 1px solid rgba(255,255,255,0.1); }
+        .stat-item:last-child { border-right: none; }
+        .stat-num { font-weight: 800; font-size: 2.8rem; color: var(--white); line-height: 1; margin-bottom: 8px; letter-spacing: -1px; }
+        .stat-blue { color: var(--blue-light); }
+        .stat-lbl { font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ── SECTIONS ── */
+        section { padding: 100px 5vw; }
+        .section-label { display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--blue); margin-bottom: 16px; }
+        .section-label::before { content: ''; display: inline-block; width: 24px; height: 3px; background: var(--blue); border-radius: 2px; }
+        h2.section-title { font-weight: 800; font-size: clamp(2rem, 3.5vw, 2.8rem); color: var(--navy); line-height: 1.15; letter-spacing: -1px; margin-bottom: 16px; }
+        .section-lead { color: var(--muted); font-size: 1.1rem; line-height: 1.7; max-width: 600px; }
+
+        /* ── ABOUT ── */
+        #about { background: var(--white); }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; margin-top: 60px; }
+        .about-text p { color: var(--text); line-height: 1.8; font-size: 1rem; margin-bottom: 20px; }
+        .about-text p strong { color: var(--navy); font-weight: 700; }
+
+        .domain-tags { display: flex; flex-wrap: wrap; gap: 10px; margin: 28px 0; }
+        .domain-tag { background: var(--offwhite); border: 1px solid var(--border); color: var(--navy); padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .domain-tag:hover { background: var(--blue); color: white; border-color: var(--blue); transform: translateY(-2px); }
+        .domain-tag i { font-size: 0.9rem; color: var(--blue-light); }
+        .domain-tag:hover i { color: var(--white); }
+
+        .specialization-line { font-size: 0.9rem; font-weight: 600; color: var(--navy); border-left: 4px solid var(--blue); padding-left: 16px; line-height: 1.6; }
+
+        .vision-card { background: var(--navy); border-radius: 20px; padding: 48px 44px; color: white; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .vision-card::before { content: '\201C'; position: absolute; top: -30px; right: 20px; font-size: 14rem; font-weight: 900; color: rgba(255,255,255,0.03); line-height: 1; pointer-events: none; }
+        .vision-card .vc-label { font-size: 0.8rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--blue-light); margin-bottom: 20px; }
+        .vision-card blockquote { font-weight: 700; font-size: 1.5rem; line-height: 1.4; color: white; margin-bottom: 32px; }
+        .vision-card .divider { height: 1px; background: rgba(255,255,255,0.1); margin-bottom: 28px; }
+        .vision-card h5 { font-weight: 700; font-size: 1rem; color: white; margin-bottom: 12px; }
+        .vision-card p { color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.75; }
+
+        /* ── DIFFERENCE ── */
+        #difference { background: var(--offwhite); }
+        .diff-header { max-width: 600px; margin-bottom: 60px; }
+        .diff-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        .diff-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 36px 32px; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .diff-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--blue), var(--blue-light)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
+        .diff-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.06); border-color: #cbd5e1; }
+        .diff-card:hover::after { transform: scaleX(1); }
+        .diff-icon { width: 56px; height: 56px; border-radius: 14px; background: var(--cream); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--blue); margin-bottom: 22px; transition: all 0.3s; }
+        .diff-card:hover .diff-icon { background: var(--blue); color: var(--white); transform: rotate(5deg) scale(1.05); }
+        .diff-card h4 { font-weight: 800; font-size: 1.25rem; color: var(--navy); margin-bottom: 12px; letter-spacing: -0.3px; }
+        .diff-card p { color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+
+        /* ── JOIN US ── */
+        #join-us { background: var(--white); }
+        .join-header { text-align: center; margin-bottom: 60px; }
+        .join-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 820px; margin: 0 auto; }
+        .join-card { border-radius: 20px; padding: 44px 40px; text-align: center; transition: transform 0.3s; }
+        .join-card:hover { transform: translateY(-6px); }
+        .join-card.light { background: var(--offwhite); border: 1px solid var(--border); }
+        .join-card.dark { background: var(--navy); border: 1px solid var(--navy); }
+        .join-icon { width: 68px; height: 68px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 24px; }
+        .join-card.light .join-icon { background: var(--white); color: var(--blue); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+        .join-card.dark .join-icon { background: rgba(255,255,255,0.1); color: var(--white); }
+        .join-card h4 { font-weight: 800; font-size: 1.4rem; margin-bottom: 10px; letter-spacing: -0.3px; }
+        .join-card.light h4 { color: var(--navy); }
+        .join-card.dark h4 { color: var(--white); }
+        .join-card p { font-size: 0.95rem; line-height: 1.65; margin-bottom: 28px; }
+        .join-card.light p { color: var(--muted); }
+        .join-card.dark p { color: rgba(255,255,255,0.6); }
+        .btn-join-light { display: block; background: var(--blue); color: white; text-decoration: none; padding: 13px; border-radius: 10px; font-weight: 600; font-size: 0.95rem; transition: background 0.2s; }
+        .btn-join-light:hover { background: var(--blue-light); color: white; }
+        .btn-join-dark { display: block; background: var(--white); color: var(--navy); text-decoration: none; padding: 13px; border-radius: 10px; font-weight: 700; font-size: 0.95rem; transition: opacity 0.2s; }
+        .btn-join-dark:hover { opacity: 0.9; color: var(--navy); }
+
+        /* ── FOOTER ── */
+        footer { background: var(--cream); border-top: 1px solid var(--border); padding: 52px 5vw 32px; }
+        .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+        .footer-brand-text { font-weight: 800; font-size: 1.2rem; color: var(--navy); text-transform: uppercase; }
+        .footer-tagline { font-size: 0.9rem; color: var(--muted); margin-bottom: 32px; }
+        .footer-divider { width: 100%; height: 1px; background: var(--border); margin-bottom: 24px; }
+        .footer-copy { font-size: 0.85rem; font-weight: 500; color: #94a3b8; }
+
+        /* ── ANIMATIONS ── */
+        .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .fade-in.visible { opacity: 1; transform: none; }
+
+        /* ── MOBILE ── */
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0; background: white; padding: 16px 5vw; border-bottom: 1px solid var(--border); gap: 2px; }
+            .hamburger { display: flex; }
+            .hero { grid-template-columns: 1fr; padding: 40px 5vw 60px; gap: 40px; }
+            .hero-right { align-items: stretch; }
+            .hero-card-stack, .hero-floating-stat { max-width: 100%; }
+            .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+            .stat-item { border-right: none; }
+            .about-grid { grid-template-columns: 1fr; gap: 40px; }
+            .diff-grid { grid-template-columns: 1fr; }
+            .join-grid { grid-template-columns: 1fr; }
+            section { padding: 72px 5vw; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="navbar">
+        <a class="nav-brand" href="/">
+            <img src="{% static 'img/percept_logo.png' %}" alt="Percept Placements Logo" class="brand-logo" onerror="this.style.display='none';">
+            <span class="nav-brand-text">Percept Placements</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="/">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#difference">Why Us</a></li>
+            <div class="nav-divider"></div>
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="#join-us" class="nav-cta">Get Started</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-left">
+
+            <div class="hero-badge fade-in">
+                <div class="icon-glow"><i class="fas fa-star"></i></div>
+                <span class="tagline-text">We Know &nbsp;&bull;&nbsp; We Understand &nbsp;&bull;&nbsp; We Deliver</span>
+            </div>
+
+            <h1>India's <em>Premier</em> Recruitment Firm for CAs &amp; Finance Professionals</h1>
+            <p class="hero-sub">
+                Connecting world-class financial talent with India's leading CA firms and multinational organizations. With two decades of trust, we bridge the gap between exceptional professionals and the opportunities they deserve.
+            </p>
+            <div class="hero-actions">
+                <a href="{% url 'register_candidate' %}" class="btn-primary">
+                    <i class="fas fa-user-plus"></i> Candidate Sign Up
+                </a>
+                <a href="#about" class="btn-outline">
+                    Learn More <i class="fas fa-arrow-down"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="hero-card-stack fade-in">
+                <h3>Our Specializations</h3>
+                <p>Exclusively focused on finance &amp; accounting talent</p>
+                <div class="specialisms">
+                    <span class="spec-tag">Accounting</span>
+                    <span class="spec-tag">Audit & Assurance</span>
+                    <span class="spec-tag">Taxation</span>
+                    <span class="spec-tag">Transfer Pricing</span>
+                    <span class="spec-tag">Corporate Finance</span>
+                    <span class="spec-tag">Article Clerks</span>
+                    <span class="spec-tag">Semi-Qualified CAs</span>
+                    <span class="spec-tag">Commerce Professionals</span>
+                </div>
+            </div>
+            <div class="hero-floating-stat fade-in" style="transition-delay: 0.15s;">
+                <div class="icon"><i class="fas fa-users"></i></div>
+                <div>
+                    <div class="num">10,000+ <span style="font-size:0.95rem; font-weight:600; text-transform: lowercase;">CA's</span></div>
+                    <div class="lbl">Successfully Referred &amp; Mentored</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stats-inner">
+            <div class="stat-item fade-in">
+                <div class="stat-num">20<span class="stat-blue">+</span></div>
+                <div class="stat-lbl">Years of Trust</div>
+            </div>
+            <div class="stat-item fade-in" style="transition-delay:0.1s;">
+                <div class="stat-num">125k<span class="stat-blue">+</span></div>
+                <div class="stat-lbl">Students Taught</div>
+            </div>
+            <div class="stat-item fade-in" style="transition-delay:0.2s;">
+                <div class="stat-num">10k<span class="stat-blue">+</span></div>
+                <div class="stat-lbl">CAs Mentored</div>
+            </div>
+            <div class="stat-item fade-in" style="transition-delay:0.3s;">
+                <div class="stat-num">100<span class="stat-blue">+</span></div>
+                <div class="stat-lbl">Partner Clients in first month</div>
+            </div>
+        </div>
+    </div>
+
+    <section id="about">
+        <div class="section-label">Our Foundation</div>
+        <h2 class="section-title">A Legacy of Trust<br>&amp; Excellence</h2>
+
+        <div class="about-grid">
+            <div class="about-text fade-in">
+                <p>
+                    In today's dynamic global business environment, the demand for skilled financial professionals has never been greater. Organizations across industries require Chartered Accountants and semi-qualified professionals who not only possess technical expertise but also strategic insight, analytical capability, and ethical integrity.
+                </p>
+                <p>
+                    At <strong>Percept Placements</strong>, we bridge this critical gap by connecting world-class talent with leading CA firms and multinational organizations. Established with a vision to redefine professional recruitment, Percept for CAs has spent two decades as one of India's most trusted CA training organizations — proudly educating over <strong>125,000 CA students</strong> across the country.
+                </p>
+                <p>
+                    Today, we have evolved into a full-fledged placement firm, providing structured and elite recruitment services to the organizations that need them most + CA firms.
+                </p>
+
+                <div class="domain-tags">
+                    <span class="domain-tag"><i class="fas fa-building"></i> Big Six Firms</span>
+                    <span class="domain-tag"><i class="fas fa-globe"></i> Global Consulting</span>
+                    <span class="domain-tag"><i class="fas fa-building"></i> CA Firms</span>
+                    <span class="domain-tag"><i class="fas fa-landmark"></i> Banks</span>
+                    <span class="domain-tag"><i class="fas fa-chart-line"></i> Fortune 500s</span>
+                </div>
+
+                <div class="specialization-line">
+                    Specialized in: Accounting · Audit · Taxation · Investment Banking · Corporate Finance
+                </div>
+            </div>
+
+            <div class="fade-in" style="transition-delay: 0.15s;">
+                <div class="vision-card">
+                    <div class="vc-label">Our Core Philosophy</div>
+                    <blockquote>
+                        "We believe that a company's financial health is only as strong as the human capital who manage it."
+                    </blockquote>
+                    <div class="divider"></div>
+                    <h5>Vision &amp; Mission</h5>
+                    <p>
+                        To be the most reliable and respected CA &amp; commerce professional recruitment firm in India — recognized for integrity, professionalism, and commitment to excellence. Our mission is not just to fill vacancies, but to deliver talent that aligns with the client's vision, values, and long-term goals, driving sustainable growth and contributing strategically to business success.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="difference">
+        <div class="diff-header fade-in">
+            <div class="section-label">The Percept Advantage</div>
+            <h2 class="section-title">What Makes Us Different?</h2>
+            <p class="section-lead">
+                Recruitment is not about numbers — it's about impact. Our strength lies in domain specialization, ethical approach, and deep industry insight.
+            </p>
+        </div>
+
+        <div class="diff-grid">
+            <div class="diff-card fade-in">
+                <div class="diff-icon"><i class="fas fa-user-graduate"></i></div>
+                <h4>Exclusive Focus</h4>
+                <p>
+                    We specialize exclusively in the recruitment of CAs, semi-qualified professionals, commerce professionals, and Article Clerks. This sharp focus allows us to maintain a rich, top-tier, industry ready database — updated with every new pass-out batch — ensuring clients always access the best talent available.
+                </p>
+            </div>
+
+            <div class="diff-card fade-in" style="transition-delay: 0.1s;">
+                <div class="diff-icon"><i class="fas fa-network-wired"></i></div>
+                <h4>Vast Industry Network</h4>
+                <p>
+                    Leveraging two decades of trust, our relationships with leading multinational companies, top CA firms, and corporate groups enable us to offer unmatched opportunities for candidates and precise talent matches for employers.
+                </p>
+            </div>
+
+            <div class="diff-card fade-in" style="transition-delay: 0.15s;">
+                <div class="diff-icon"><i class="fas fa-tasks"></i></div>
+                <h4>Rigorous Screening Process</h4>
+                <p>
+                    Quality over quantity. Every candidate undergoes thorough evaluation of their technical competence, communication skills, analytical ability, and cultural fit — ensuring only the most capable professionals reach our clients.
+                </p>
+            </div>
+
+            <div class="diff-card fade-in" style="transition-delay: 0.2s;">
+                <div class="diff-icon"><i class="fas fa-bullseye"></i></div>
+                <h4>Client-Centric Approach</h4>
+                <p>
+                    We invest deep time understanding each client's organizational structure, culture, and long-term objectives — providing not just a suitable candidate, but the precise fit that the firm requires for lasting success.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="join-us">
+        <div class="join-header fade-in">
+            <div class="section-label" style="justify-content: center;">Join the Network</div>
+            <h2 class="section-title">India's Prime Finance Network</h2>
+            <p class="section-lead" style="margin: 0 auto; text-align: center;">
+                Whether you're a finance professional seeking your next opportunity, or an organization looking for exceptional talent — Percept Placements is your trusted partner.
+            </p>
+        </div>
+
+        <div class="join-grid">
+            <div class="join-card light fade-in">
+                <div class="join-icon"><i class="fas fa-user-graduate"></i></div>
+                <h4>CAs &amp; Professionals</h4>
+                <p>CAs, semi-qualified professionals, Article Clerks, and post-qualified experts — we mentor and place you in roles that match your ambition and expertise.</p>
+                <a href="{% url 'register_candidate' %}" class="btn-join-light">Upload Your CV</a>
+            </div>
+
+            <div class="join-card dark fade-in" style="transition-delay: 0.1s;">
+                <div class="join-icon"><i class="fas fa-building"></i></div>
+                <h4>Firms &amp; Corporates</h4>
+                <p>Connect with the most reliably filtered and technically skilled financial talent across India, matched precisely to your organization's culture and goals.</p>
+                <a href="{% url 'register_choice' %}" class="btn-join-dark">Hire with Percept</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="{% static 'img/percept_logo.png' %}" alt="Percept Placements Logo" class="brand-logo" onerror="this.style.display='none';" style="margin-right: 8px;">
+                <span class="footer-brand-text">Percept Placements</span>
+            </div>
+            <p class="footer-tagline">A Legacy of Trust in Financial Mentorship &amp; Recruitment.</p>
+            <div class="footer-divider"></div>
+            <p class="footer-copy">&copy; 2026 Percept Placements. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger menu
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+
+        // Close nav on link click (mobile)
+        navLinks.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => navLinks.classList.remove('open'));
+        });
+
+        // Intersection Observer for fade-ins
+        const faders = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        faders.forEach(el => observer.observe(el));
+
+        // Trigger hero elements immediately
+        document.querySelectorAll('.hero .fade-in').forEach(el => {
+            setTimeout(() => el.classList.add('visible'), 100);
+        });
+    </script>
+</body>
+</html>
+<!-- <!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percept Placements — Premier CA Recruitment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --navy: #111827;
+            --navy-mid: #1e293b;
+            --blue: #2563eb;
+            --blue-light: #3b82f6;
+            --cream: #f3f6f9;
+            --offwhite: #f8fafc;
+            --text: #475569;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --white: #ffffff;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--white);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 5vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+        }
+
+        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .brand-logo { max-height: 42px; width: auto; object-fit: contain; }
+        .nav-brand-text { font-weight: 800; font-size: 1.25rem; color: var(--navy); letter-spacing: -0.5px; text-transform: uppercase; }
+
+        .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.95rem; font-weight: 600; padding: 7px 14px; border-radius: 8px; transition: all 0.2s; }
+        .nav-links a:hover { color: var(--blue); background: var(--offwhite); }
+
+        .nav-cta { background: var(--blue) !important; color: var(--white) !important; border-radius: 8px !important; padding: 8px 20px !important; font-weight: 600 !important; transition: background 0.2s !important; }
+        .nav-cta:hover { background: var(--blue-light) !important; }
+
+        .nav-divider { width: 1px; height: 18px; background: var(--border); margin: 0 8px; }
+
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; border: none; background: none; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--navy); border-radius: 2px; transition: all 0.3s; }
+
+        /* ── HERO ── */
+        .hero {
+            background: var(--cream);
+            padding: 40px 5vw 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -120px; right: -120px;
+            width: 500px; height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /*  HIGHLIGHTED TAGLINE BADGE */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--white);
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            border-radius: 100px;
+            padding: 6px 24px 6px 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hero-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.2);
+        }
+
+        .hero-badge .icon-glow {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--blue), #60a5fa);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
+            animation: pulse-glow 2s infinite;
+        }
+
+        .hero-badge .tagline-text {
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            background: linear-gradient(90deg, var(--navy), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(37, 99, 235, 0.3); transform: scale(1); }
+            50% { box-shadow: 0 0 20px rgba(37, 99, 235, 0.6); transform: scale(1.05); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.4rem, 4vw, 3.6rem);
+            font-weight: 800;
+            line-height: 1.15;
+            color: var(--navy);
+            margin-bottom: 22px;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 em { font-style: normal; color: var(--blue); }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            color: var(--muted);
+            line-height: 1.7;
+            max-width: 480px;
+            margin-bottom: 36px;
+            font-weight: 500;
+        }
+
+        .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+        .btn-primary {
+            background: var(--blue);
+            color: var(--white);
+            padding: 13px 28px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid var(--blue);
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-light);
+            border-color: var(--blue-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37,99,235,0.25);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background: var(--white);
+            color: var(--navy);
+            padding: 13px 28px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: 2px solid var(--border);
+            transition: all 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-outline:hover { border-color: var(--navy); color: var(--navy); }
+
+        .hero-right { display: flex; flex-direction: column; align-items: flex-end; position: relative; }
+
+        .hero-card-stack {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            margin-bottom: 16px;
+        }
+
+        .hero-card-stack h3 { font-weight: 800; font-size: 1.4rem; color: var(--navy); margin-bottom: 6px; letter-spacing: -0.5px; }
+        .hero-card-stack p { color: var(--muted); font-size: 0.95rem; margin-bottom: 24px; }
+
+        .specialisms { display: flex; flex-wrap: wrap; gap: 8px; }
+        .spec-tag { background: var(--cream); border: 1px solid var(--border); color: var(--navy); padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; }
+
+        .hero-floating-stat {
+            background: var(--navy);
+            color: white;
+            border-radius: 16px;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .hero-floating-stat .icon {
+            width: 46px; height: 46px;
+            background: rgba(37,99,235,0.2);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            color: var(--blue-light);
+            flex-shrink: 0;
+        }
+
+        .hero-floating-stat .num { font-weight: 800; font-size: 1.5rem; color: white; line-height: 1; }
+        .hero-floating-stat .lbl { font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+        /* ── STATS BAR ── */
+        .stats-bar { background: var(--navy); padding: 52px 5vw; }
+        .stats-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; max-width: 1100px; margin: 0 auto; }
+        .stat-item { text-align: center; padding: 0 20px; border-right: 1px solid rgba(255,255,255,0.1); }
+        .stat-item:last-child { border-right: none; }
+        .stat-num { font-weight: 800; font-size: 2.8rem; color: var(--white); line-height: 1; margin-bottom: 8px; letter-spacing: -1px; }
+        .stat-blue { color: var(--blue-light); }
+        .stat-lbl { font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ── SECTIONS ── */
+        section { padding: 100px 5vw; }
+        .section-label { display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--blue); margin-bottom: 16px; }
+        .section-label::before { content: ''; display: inline-block; width: 24px; height: 3px; background: var(--blue); border-radius: 2px; }
+        h2.section-title { font-weight: 800; font-size: clamp(2rem, 3.5vw, 2.8rem); color: var(--navy); line-height: 1.15; letter-spacing: -1px; margin-bottom: 16px; }
+        .section-lead { color: var(--muted); font-size: 1.1rem; line-height: 1.7; max-width: 600px; }
+
+        /* ── ABOUT ── */
+        #about { background: var(--white); }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; margin-top: 60px; }
+        .about-text p { color: var(--text); line-height: 1.8; font-size: 1rem; margin-bottom: 20px; }
+        .about-text p strong { color: var(--navy); font-weight: 700; }
+
+        .domain-tags { display: flex; flex-wrap: wrap; gap: 10px; margin: 28px 0; }
+        .domain-tag { background: var(--offwhite); border: 1px solid var(--border); color: var(--navy); padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .domain-tag:hover { background: var(--blue); color: white; border-color: var(--blue); transform: translateY(-2px); }
+        .domain-tag i { font-size: 0.9rem; color: var(--blue-light); }
+        .domain-tag:hover i { color: var(--white); }
+
+        .specialization-line { font-size: 0.9rem; font-weight: 600; color: var(--navy); border-left: 4px solid var(--blue); padding-left: 16px; line-height: 1.6; }
+
+        .vision-card { background: var(--navy); border-radius: 20px; padding: 48px 44px; color: white; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .vision-card::before { content: '\201C'; position: absolute; top: -30px; right: 20px; font-size: 14rem; font-weight: 900; color: rgba(255,255,255,0.03); line-height: 1; pointer-events: none; }
+        .vision-card .vc-label { font-size: 0.8rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--blue-light); margin-bottom: 20px; }
+        .vision-card blockquote { font-weight: 700; font-size: 1.5rem; line-height: 1.4; color: white; margin-bottom: 32px; }
+        .vision-card .divider { height: 1px; background: rgba(255,255,255,0.1); margin-bottom: 28px; }
+        .vision-card h5 { font-weight: 700; font-size: 1rem; color: white; margin-bottom: 12px; }
+        .vision-card p { color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.75; }
+
+        /* ── DIFFERENCE ── */
+        #difference { background: var(--offwhite); }
+        .diff-header { max-width: 600px; margin-bottom: 60px; }
+        .diff-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        .diff-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 36px 32px; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .diff-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--blue), var(--blue-light)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
+        .diff-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.06); border-color: #cbd5e1; }
+        .diff-card:hover::after { transform: scaleX(1); }
+        .diff-icon { width: 56px; height: 56px; border-radius: 14px; background: var(--cream); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--blue); margin-bottom: 22px; transition: all 0.3s; }
+        .diff-card:hover .diff-icon { background: var(--blue); color: var(--white); transform: rotate(5deg) scale(1.05); }
+        .diff-card h4 { font-weight: 800; font-size: 1.25rem; color: var(--navy); margin-bottom: 12px; letter-spacing: -0.3px; }
+        .diff-card p { color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+
+        /* ── JOIN US ── */
+        #join-us { background: var(--white); }
+        .join-header { text-align: center; margin-bottom: 60px; }
+        .join-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 820px; margin: 0 auto; }
+        .join-card { border-radius: 20px; padding: 44px 40px; text-align: center; transition: transform 0.3s; }
+        .join-card:hover { transform: translateY(-6px); }
+        .join-card.light { background: var(--offwhite); border: 1px solid var(--border); }
+        .join-card.dark { background: var(--navy); border: 1px solid var(--navy); }
+        .join-icon { width: 68px; height: 68px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 24px; }
+        .join-card.light .join-icon { background: var(--white); color: var(--blue); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+        .join-card.dark .join-icon { background: rgba(255,255,255,0.1); color: var(--white); }
+        .join-card h4 { font-weight: 800; font-size: 1.4rem; margin-bottom: 10px; letter-spacing: -0.3px; }
+        .join-card.light h4 { color: var(--navy); }
+        .join-card.dark h4 { color: var(--white); }
+        .join-card p { font-size: 0.95rem; line-height: 1.65; margin-bottom: 28px; }
+        .join-card.light p { color: var(--muted); }
+        .join-card.dark p { color: rgba(255,255,255,0.6); }
+        .btn-join-light { display: block; background: var(--blue); color: white; text-decoration: none; padding: 13px; border-radius: 10px; font-weight: 600; font-size: 0.95rem; transition: background 0.2s; }
+        .btn-join-light:hover { background: var(--blue-light); color: white; }
+        .btn-join-dark { display: block; background: var(--white); color: var(--navy); text-decoration: none; padding: 13px; border-radius: 10px; font-weight: 700; font-size: 0.95rem; transition: opacity 0.2s; }
+        .btn-join-dark:hover { opacity: 0.9; color: var(--navy); }
+
+        /* ── FOOTER ── */
+        footer { background: var(--cream); border-top: 1px solid var(--border); padding: 52px 5vw 32px; }
+        .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+        .footer-brand-text { font-weight: 800; font-size: 1.2rem; color: var(--navy); text-transform: uppercase; }
+        .footer-tagline { font-size: 0.9rem; color: var(--muted); margin-bottom: 32px; }
+        .footer-divider { width: 100%; height: 1px; background: var(--border); margin-bottom: 24px; }
+        .footer-copy { font-size: 0.85rem; font-weight: 500; color: #94a3b8; }
+
+        /* ── ANIMATIONS ── */
+        .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .fade-in.visible { opacity: 1; transform: none; }
+
+        /* ── MOBILE ── */
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0; background: white; padding: 16px 5vw; border-bottom: 1px solid var(--border); gap: 2px; }
+            .hamburger { display: flex; }
+            .hero { grid-template-columns: 1fr; padding: 40px 5vw 60px; gap: 40px; }
+            .hero-right { align-items: stretch; }
+            .hero-card-stack, .hero-floating-stat { max-width: 100%; }
+            .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+            .stat-item { border-right: none; }
+            .about-grid { grid-template-columns: 1fr; gap: 40px; }
+            .diff-grid { grid-template-columns: 1fr; }
+            .join-grid { grid-template-columns: 1fr; }
+            section { padding: 72px 5vw; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="navbar">
+        <a class="nav-brand" href="/">
+            <img src="{% static 'img/percept_logo.png' %}" alt="Percept Placements Logo" class="brand-logo" onerror="this.style.display='none';">
+            <span class="nav-brand-text">Percept Placements</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="/">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#difference">Why Us</a></li>
+            <div class="nav-divider"></div>
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="#join-us" class="nav-cta">Get Started</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-left">
+
+            <div class="hero-badge fade-in">
+                <div class="icon-glow"><i class="fas fa-star"></i></div>
+                <span class="tagline-text">We Know &nbsp;&bull;&nbsp; We Understand &nbsp;&bull;&nbsp; We Deliver</span>
+            </div>
+
+            <h1>India's <em>Premier</em> Recruitment Firm for CAs &amp; Finance Professionals</h1>
+            <p class="hero-sub">
+                Connecting world-class financial talent with India's leading CA firms and multinational organizations. With two decades of trust, we bridge the gap between exceptional professionals and the opportunities they deserve.
+            </p>
+            <div class="hero-actions">
+                <a href="{% url 'register_candidate' %}" class="btn-primary">
+                    <i class="fas fa-user-plus"></i> Candidate Sign Up
+                </a>
+                <a href="#about" class="btn-outline">
+                    Learn More <i class="fas fa-arrow-down"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="hero-card-stack fade-in">
+                <h3>Our Specializations</h3>
+                <p>Exclusively focused on finance &amp; accounting talent</p>
+                <div class="specialisms">
+                    <span class="spec-tag">Accounting</span>
+                    <span class="spec-tag">Audit</span>
+                    <span class="spec-tag">Taxation</span>
+                    <span class="spec-tag">Investment Banking</span>
+                    <span class="spec-tag">Corporate Finance</span>
+                    <span class="spec-tag">Article Clerks</span>
+                    <span class="spec-tag">Semi-Qualified CAs</span>
+                </div>
+            </div>
+            <div class="hero-floating-stat fade-in" style="transition-delay: 0.15s;">
+                <div class="icon"><i class="fas fa-users"></i></div>
+                <div>
+                    <div class="num">10,000+ <span style="font-size:0.95rem; font-weight:600;">CAs</span></div>
+                    <div class="lbl">Successfully Referred &amp; Mentored</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stats-inner">
+            <div class="stat-item fade-in">
+                <div class="stat-num">20<span class="stat-blue">+</span></div>
+                <div class="stat-lbl">Years of Trust</div>
+            </div>
+            <div class="stat-item fade-in" style="transition-delay:0.1s;">
+                <div class="stat-num">100k<span class="stat-blue">+</span></div>
+                <div class="stat-lbl">Students Taught</div>
+            </div>
+            <div class="stat-item fade-in" style="transition-delay:0.2s;">
+                <div class="stat-num">10k<span class="stat-blue">+</span></div>
+                <div class="stat-lbl">CAs Mentored</div>
+            </div>
+            <div class="stat-item fade-in" style="transition-delay:0.3s;">
+                <div class="stat-num">100<span class="stat-blue">+</span></div>
+                <div class="stat-lbl">Partner Clients</div>
+            </div>
+        </div>
+    </div>
+
+    <section id="about">
+        <div class="section-label">Our Foundation</div>
+        <h2 class="section-title">A Legacy of Trust<br>&amp; Excellence</h2>
+
+        <div class="about-grid">
+            <div class="about-text fade-in">
+                <p>
+                    In today's dynamic global business environment, the demand for skilled financial professionals has never been greater. Organizations across industries require Chartered Accountants and semi-qualified professionals who not only possess technical expertise but also strategic insight, analytical capability, and ethical integrity.
+                </p>
+                <p>
+                    At <strong>Percept Placements</strong>, we bridge this critical gap by connecting world-class talent with leading CA firms and multinational organizations. Established with a vision to redefine professional recruitment, Percept for CAs has spent two decades as one of India's most trusted CA training organizations — proudly educating over <strong>100,000 CA students</strong> across the country.
+                </p>
+                <p>
+                    Today, we have evolved into a full-fledged placement firm, providing structured and elite recruitment services to the organizations that need them most.
+                </p>
+
+                <div class="domain-tags">
+                    <span class="domain-tag"><i class="fas fa-building"></i> Big Six Firms</span>
+                    <span class="domain-tag"><i class="fas fa-globe"></i> Global Consulting</span>
+                    <span class="domain-tag"><i class="fas fa-landmark"></i> Banks</span>
+                    <span class="domain-tag"><i class="fas fa-chart-line"></i> Fortune 500s</span>
+                </div>
+
+                <div class="specialization-line">
+                    Specialized in: Accounting · Audit · Taxation · Investment Banking · Corporate Finance
+                </div>
+            </div>
+
+            <div class="fade-in" style="transition-delay: 0.15s;">
+                <div class="vision-card">
+                    <div class="vc-label">Our Core Philosophy</div>
+                    <blockquote>
+                        "We believe that a company's financial health is only as strong as the human capital who manage it."
+                    </blockquote>
+                    <div class="divider"></div>
+                    <h5>Vision &amp; Mission</h5>
+                    <p>
+                        To be the most reliable and respected CA recruitment firm in India — recognized for integrity, professionalism, and commitment to excellence. Our mission is not just to fill vacancies, but to deliver talent that aligns with the client's vision, values, and long-term goals, driving sustainable growth and contributing strategically to business success.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="difference">
+        <div class="diff-header fade-in">
+            <div class="section-label">The Percept Advantage</div>
+            <h2 class="section-title">What Makes Us Different?</h2>
+            <p class="section-lead">
+                Recruitment is not about numbers — it's about impact. Our strength lies in domain specialization, ethical approach, and deep industry insight.
+            </p>
+        </div>
+
+        <div class="diff-grid">
+            <div class="diff-card fade-in">
+                <div class="diff-icon"><i class="fas fa-user-graduate"></i></div>
+                <h4>Exclusive Focus</h4>
+                <p>
+                    We specialize exclusively in the recruitment of CAs, semi-qualified professionals, and Article Clerks. This sharp focus allows us to maintain a rich, top-tier database — updated with every new pass-out batch — ensuring clients always access the best talent available.
+                </p>
+            </div>
+
+            <div class="diff-card fade-in" style="transition-delay: 0.1s;">
+                <div class="diff-icon"><i class="fas fa-network-wired"></i></div>
+                <h4>Vast Industry Network</h4>
+                <p>
+                    Leveraging two decades of trust, our relationships with leading multinational companies, top CA firms, and corporate groups enable us to offer unmatched opportunities for candidates and precise talent matches for employers.
+                </p>
+            </div>
+
+            <div class="diff-card fade-in" style="transition-delay: 0.15s;">
+                <div class="diff-icon"><i class="fas fa-tasks"></i></div>
+                <h4>Rigorous Screening Process</h4>
+                <p>
+                    Quality over quantity. Every candidate undergoes thorough evaluation of their technical competence, communication skills, analytical ability, and cultural fit — ensuring only the most capable professionals reach our clients.
+                </p>
+            </div>
+
+            <div class="diff-card fade-in" style="transition-delay: 0.2s;">
+                <div class="diff-icon"><i class="fas fa-bullseye"></i></div>
+                <h4>Client-Centric Approach</h4>
+                <p>
+                    We invest deep time understanding each client's organizational structure, culture, and long-term objectives — providing not just a suitable candidate, but the precise fit that the firm requires for lasting success.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="join-us">
+        <div class="join-header fade-in">
+            <div class="section-label" style="justify-content: center;">Join the Network</div>
+            <h2 class="section-title">India's Prime Finance Network</h2>
+            <p class="section-lead" style="margin: 0 auto; text-align: center;">
+                Whether you're a finance professional seeking your next opportunity, or an organization looking for exceptional talent — Percept Placements is your trusted partner.
+            </p>
+        </div>
+
+        <div class="join-grid">
+            <div class="join-card light fade-in">
+                <div class="join-icon"><i class="fas fa-user-graduate"></i></div>
+                <h4>CAs &amp; Professionals</h4>
+                <p>CAs, semi-qualified professionals, Article Clerks, and post-qualified experts — we mentor and place you in roles that match your ambition and expertise.</p>
+                <a href="{% url 'register_candidate' %}" class="btn-join-light">Upload Your CV</a>
+            </div>
+
+            <div class="join-card dark fade-in" style="transition-delay: 0.1s;">
+                <div class="join-icon"><i class="fas fa-building"></i></div>
+                <h4>Firms &amp; Corporates</h4>
+                <p>Connect with the most reliably filtered and technically skilled financial talent across India, matched precisely to your organization's culture and goals.</p>
+                <a href="{% url 'register_choice' %}" class="btn-join-dark">Hire with Percept</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="{% static 'img/percept_logo.png' %}" alt="Percept Placements Logo" class="brand-logo" onerror="this.style.display='none';" style="margin-right: 8px;">
+                <span class="footer-brand-text">Percept Placements</span>
+            </div>
+            <p class="footer-tagline">A Legacy of Trust in Financial Mentorship &amp; Recruitment.</p>
+            <div class="footer-divider"></div>
+            <p class="footer-copy">&copy; 2026 Percept Placements. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger menu
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+
+        // Close nav on link click (mobile)
+        navLinks.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => navLinks.classList.remove('open'));
+        });
+
+        // Intersection Observer for fade-ins
+        const faders = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        faders.forEach(el => observer.observe(el));
+
+        // Trigger hero elements immediately
+        document.querySelectorAll('.hero .fade-in').forEach(el => {
+            setTimeout(() => el.classList.add('visible'), 100);
+        });
+    </script>
+</body>
+</html> -->

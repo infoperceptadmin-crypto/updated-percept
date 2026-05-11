@@ -1,0 +1,364 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candidate Detail | Percept Placements</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+/* BODY */
+
+body{
+font-family:'Inter',sans-serif;
+background:#f3f6f9;
+margin:0;
+color:#111827;
+display:flex;
+min-height:100vh;
+}
+
+/* NAVBAR */
+
+.top-navbar{
+position:fixed;
+top:0;
+left:240px;
+right:0;
+height:70px;
+background:white;
+border-bottom:1px solid #e2e8f0;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 35px;
+z-index:100;
+}
+
+.nav-brand{
+display:flex;
+align-items:center;
+gap:10px;
+text-decoration:none;
+}
+
+.brand-logo{
+height:38px;
+}
+
+.brand-text{
+font-weight:800;
+font-size:18px;
+color:#111827;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+position:fixed;
+top:0;
+left:0;
+width:240px;
+height:100vh;
+background:#111827;
+padding-top:30px;
+color:white;
+display:flex;
+flex-direction:column;
+}
+
+.sidebar h4{
+text-align:center;
+font-weight:700;
+margin-bottom:30px;
+}
+
+.sidebar a,
+.sidebar .logout-btn{
+display:flex;
+align-items:center;
+padding:14px 25px;
+color:#cbd5f5;
+text-decoration:none;
+margin-bottom:10px;
+border-radius:8px;
+font-size:15px;
+transition:0.25s;
+background:transparent;
+border:none;
+width:100%;
+}
+
+.sidebar a i,
+.sidebar .logout-btn i{
+margin-right:12px;
+}
+
+.sidebar a:hover,
+.sidebar a.active,
+.sidebar .logout-btn:hover{
+background:#2563eb;
+color:white;
+}
+
+/* MAIN */
+
+.main-content{
+margin-left:240px;
+padding:110px 40px 40px;
+width:100%;
+}
+
+/* PROFILE CARD */
+
+.profile-card{
+border:none;
+border-radius:16px;
+background:white;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+padding:30px;
+max-width:900px;
+}
+
+/* HEADER */
+
+.profile-header{
+border-bottom:1px solid #eee;
+margin-bottom:20px;
+padding-bottom:15px;
+}
+
+.profile-name{
+font-weight:700;
+font-size:26px;
+}
+
+.profile-meta{
+color:#64748b;
+font-size:14px;
+}
+
+/* SECTION */
+
+.section-title{
+font-weight:600;
+font-size:16px;
+margin-top:25px;
+margin-bottom:10px;
+border-left:4px solid #2563eb;
+padding-left:10px;
+}
+
+/* SKILLS */
+
+.badge-skill{
+background:#2563eb;
+font-size:13px;
+padding:6px 10px;
+margin:3px;
+}
+
+/* INFO */
+
+.info-row{
+padding:6px 0;
+border-bottom:1px dashed #eee;
+font-size:14px;
+}
+
+/* DOC BUTTON */
+
+.doc-link{
+margin:5px 8px 5px 0;
+border-radius:30px;
+padding:6px 14px;
+}
+
+/* BACK BUTTON */
+
+.back-btn{
+border-radius:30px;
+padding:6px 16px;
+margin-bottom:20px;
+}
+
+/* DOMAIN LIST */
+
+.domain-list li{
+margin-bottom:5px;
+font-size:14px;
+}
+
+/* STAT */
+
+.stat-box{
+background:#f1f5f9;
+border-radius:10px;
+padding:12px;
+font-size:14px;
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h4>Admin</h4>
+
+<a href="{% url 'adminpanel:admin_dashboard' %}">
+<i class="bi bi-speedometer2"></i>Dashboard
+</a>
+
+<a href="{% url 'adminpanel:verify_employers' %}">
+<i class="bi bi-building"></i>Verify Employers
+</a>
+
+<a href="{% url 'adminpanel:verify_candidates' %}" class="active">
+<i class="bi bi-person-check"></i>Verify Candidates
+</a>
+
+<a href="{% url 'adminpanel:manage_skills' %}">
+<i class="bi bi-code-slash"></i>Manage Skills
+</a>
+
+<div class="mt-auto mb-4 px-3">
+
+<form action="{% url 'logout' %}" method="post">
+{% csrf_token %}
+<button type="submit" class="logout-btn">
+<i class="bi bi-box-arrow-right"></i>Logout
+</button>
+</form>
+
+</div>
+
+</div>
+
+
+<!-- NAVBAR -->
+
+<div class="top-navbar">
+
+<a class="nav-brand" href="/">
+<img src="{% static 'img/percept_logo.png' %}" class="brand-logo">
+<span class="brand-text">Percept Placements</span>
+</a>
+
+</div>
+
+
+<!-- MAIN -->
+
+<div class="main-content">
+
+<a href="{% url 'adminpanel:verify_candidates' %}" class="btn btn-secondary back-btn">
+← Back to Candidates
+</a>
+
+<div class="profile-card">
+
+<div class="profile-header">
+
+<div class="profile-name">
+{{ candidate.user.get_full_name }}
+</div>
+
+<div class="profile-meta">
+{{ candidate.user.email }}
+</div>
+
+<div class="stat-box mt-3">
+<strong>CA Status:</strong> {{ candidate.user.ca_status }} |
+<strong>Profile Completion:</strong> {{ candidate.get_completion_percentage }}%
+</div>
+
+</div>
+
+<h5 class="section-title">Languages Known</h5>
+
+{% if candidate.languages %}
+<p>{{ candidate.languages|join:", " }}</p>
+{% else %}
+<p class="text-muted">Not specified</p>
+{% endif %}
+
+<h5 class="section-title">Software Skills</h5>
+
+{% for skill in candidate.software_skills.all %}
+<span class="badge badge-skill">{{ skill.name }}</span>
+{% empty %}
+<p class="text-muted">No skills added</p>
+{% endfor %}
+
+<h5 class="section-title">ICAI & Articleship</h5>
+
+<div class="info-row"><strong>ICAI Registration:</strong> {{ candidate.icai_reg_num|default:"-" }}</div>
+<div class="info-row"><strong>Articleship Start:</strong> {{ candidate.articleship_start_date|default:"-" }}</div>
+<div class="info-row"><strong>Articleship End:</strong> {{ candidate.articleship_end_date|default:"-" }}</div>
+<div class="info-row"><strong>Current Firm/City:</strong> {{ candidate.current_firm_city|default:"-" }}</div>
+
+<h5 class="section-title">Preferred Industries</h5>
+
+{% if candidate.preferred_industries %}
+<p>{{ candidate.preferred_industries|join:", " }}</p>
+{% else %}
+<p class="text-muted">Not specified</p>
+{% endif %}
+
+<h5 class="section-title">Domain Exposure</h5>
+
+{% if candidate.domain_exposure %}
+<ul class="domain-list">
+{% for domain, prof in candidate.domain_exposure.items %}
+<li><strong>{{ domain }}</strong> : {{ prof }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p class="text-muted">Not specified</p>
+{% endif %}
+
+<h5 class="section-title">Job Preferences</h5>
+
+<div class="info-row"><strong>Preferred Job Roles:</strong> {{ candidate.preferred_job_roles|default:"-" }}</div>
+<div class="info-row"><strong>Employment Type:</strong> {{ candidate.employment_type|default:"-" }}</div>
+<div class="info-row"><strong>Seeking Type:</strong> {{ candidate.seeking_type|default:"-" }}</div>
+<div class="info-row"><strong>Career Preference:</strong> {{ candidate.career_preference|default:"-" }}</div>
+<div class="info-row"><strong>Study Status:</strong> {{ candidate.study_status|default:"-" }}</div>
+
+<h5 class="section-title">Documents</h5>
+
+{% if candidate.articleship_completion_cert %}
+<a href="{{ candidate.articleship_completion_cert.url }}" target="_blank"
+class="btn btn-outline-primary btn-sm doc-link">
+Articleship Certificate
+</a>
+{% endif %}
+
+{% if candidate.experience_proof %}
+<a href="{{ candidate.experience_proof.url }}" target="_blank"
+class="btn btn-outline-dark btn-sm doc-link">
+Experience Proof
+</a>
+{% endif %}
+
+{% if not candidate.articleship_completion_cert and not candidate.experience_proof %}
+<p class="text-muted">No documents uploaded</p>
+{% endif %}
+
+</div>
+
+</div>
+
+</body>
+</html>

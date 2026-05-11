@@ -1,0 +1,353 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard | Percept Placements</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+font-family:'Inter',sans-serif;
+background:#f3f6f9;
+margin:0;
+color:#111827;
+display:flex;
+}
+
+/* NAVBAR */
+
+.top-navbar{
+position:fixed;
+top:0;
+left:240px;
+right:0;
+height:70px;
+background:white;
+border-bottom:1px solid #e2e8f0;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 35px;
+z-index:100;
+}
+
+.nav-brand{
+display:flex;
+align-items:center;
+gap:10px;
+text-decoration:none;
+}
+
+.brand-logo{
+height:38px;
+}
+
+.brand-text{
+font-weight:800;
+font-size:18px;
+color:#111827;
+}
+
+.logout-btn{
+background:#2563eb;
+border:none;
+color:white;
+padding:8px 18px;
+border-radius:8px;
+font-weight:600;
+}
+
+.logout-btn:hover{
+background:#1d4ed8;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+position:fixed;
+top:0;
+left:0;
+width:240px;
+height:100vh;
+background:#111827;
+padding-top:30px;
+color:white;
+display:flex;
+flex-direction:column;
+}
+
+.sidebar h4{
+text-align:center;
+font-weight:700;
+margin-bottom:30px;
+}
+
+.sidebar a{
+display:flex;
+align-items:center;
+padding:14px 25px;
+color:#cbd5f5;
+text-decoration:none;
+margin-bottom:10px;
+border-radius:8px;
+font-size:15px;
+transition:0.25s;
+}
+
+.sidebar a i{
+margin-right:12px;
+}
+
+.sidebar a:hover,
+.sidebar a.active{
+background:#2563eb;
+color:white;
+}
+
+/* MAIN */
+
+.main-content{
+margin-left:240px;
+padding:110px 40px 40px;
+width:100%;
+}
+
+/* DASHBOARD CARDS */
+
+.dashboard-link{
+text-decoration:none;
+color:inherit;
+}
+
+.dashboard-card{
+background:white;
+border:1px solid #e2e8f0;
+border-radius:16px;
+padding:30px;
+text-align:center;
+transition:0.25s;
+height:100%;
+}
+
+.dashboard-card:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+border-color:#cbd5f5;
+}
+
+.card-icon{
+font-size:32px;
+color:#2563eb;
+margin-bottom:12px;
+}
+
+.dashboard-card h4{
+font-size:34px;
+font-weight:800;
+margin:0;
+color:#111827;
+}
+
+.dashboard-card p{
+font-size:13px;
+text-transform:uppercase;
+color:#64748b;
+margin-top:5px;
+letter-spacing:1px;
+}
+
+.stat-row{
+display:flex;
+justify-content:space-between;
+margin-top:18px;
+font-size:13px;
+color:#475569;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.sidebar{
+width:70px;
+}
+
+.sidebar h4{
+display:none;
+}
+
+.sidebar a{
+justify-content:center;
+font-size:0;
+}
+
+.sidebar a i{
+margin:0;
+}
+
+.main-content{
+margin-left:70px;
+}
+
+.top-navbar{
+left:70px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h4>Admin</h4>
+
+<a href="{% url 'adminpanel:admin_dashboard' %}" class="active">
+<i class="bi bi-speedometer2"></i> Dashboard
+</a>
+
+<a href="{% url 'adminpanel:verify_employers' %}">
+<i class="bi bi-building"></i> Verify Employers
+</a>
+
+<a href="{% url 'adminpanel:verify_candidates' %}">
+<i class="bi bi-people"></i> Verify Candidates
+</a>
+
+<a href="{% url 'adminpanel:manage_skills' %}">
+<i class="bi bi-code-slash"></i> Manage Skills
+</a>
+
+</div>
+
+
+<!-- NAVBAR -->
+
+<div class="top-navbar">
+
+<a class="nav-brand" href="/">
+<img src="{% static 'img/percept_logo.png' %}" class="brand-logo">
+<span class="brand-text">Percept Placements</span>
+</a>
+
+<form action="{% url 'logout' %}" method="post">
+{% csrf_token %}
+<button class="logout-btn">
+<i class="bi bi-box-arrow-right"></i> Logout
+</button>
+</form>
+
+</div>
+
+
+<!-- MAIN CONTENT -->
+
+<div class="main-content">
+
+<h3 class="mb-4 fw-bold">Admin Dashboard</h3>
+
+<div class="row g-4">
+
+<!-- FIRMS -->
+
+<div class="col-md-4">
+
+<a href="{% url 'adminpanel:verify_employers' %}" class="dashboard-link">
+
+<div class="dashboard-card">
+
+<div class="card-icon">
+<i class="bi bi-building"></i>
+</div>
+
+<h4>{{ total_firms }}</h4>
+<p>Total Firms</p>
+
+<div class="stat-row">
+<span>Pending: {{ pending_firms }}</span>
+<span>Approved: {{ approved_firms }}</span>
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+
+<!-- CORPORATES -->
+
+<div class="col-md-4">
+
+<a href="{% url 'adminpanel:verify_employers' %}" class="dashboard-link">
+
+<div class="dashboard-card">
+
+<div class="card-icon">
+<i class="bi bi-briefcase"></i>
+</div>
+
+<h4>{{ total_corporates }}</h4>
+<p>Total Corporates</p>
+
+<div class="stat-row">
+<span>Pending: {{ pending_corporates }}</span>
+<span>Approved: {{ approved_corporates }}</span>
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+
+<!-- CANDIDATES -->
+
+<div class="col-md-4">
+
+<a href="{% url 'adminpanel:verify_candidates' %}" class="dashboard-link">
+
+<div class="dashboard-card">
+
+<div class="card-icon">
+<i class="bi bi-people"></i>
+</div>
+
+<h4>{{ total_candidates }}</h4>
+<p>Total Candidates</p>
+
+<div class="stat-row">
+<span>Pending: {{ pending_candidates }}</span>
+<span>Approved: {{ approved_candidates }}</span>
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+
+</div>
+
+</div>
+
+</body>
+</html>

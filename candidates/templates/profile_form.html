@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} | CA Connect{% endblock %}
+
+{% block content %}
+<style>
+    /* --- Form Section Styling --- */
+    .form-section {
+        background: #ffffff;
+        padding: 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        margin-bottom: 2rem;
+        border: 1px solid #f1f5f9;
+    }
+
+    /* --- Form Controls --- */
+    .form-label {
+        font-weight: 600;
+        color: #334155;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        padding: 0.6rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.1);
+    }
+
+    /* --- Checkbox Grids --- */
+    .checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+        max-height: 280px;
+        overflow-y: auto;
+        border: 1px solid #e2e8f0;
+        padding: 15px;
+        border-radius: 10px;
+        background: #f8fafc;
+    }
+
+    .checkbox-grid label {
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s;
+        color: #475569;
+        font-weight: 500;
+    }
+
+    .checkbox-grid label:hover {
+        border-color: #cbd5e1;
+        background: #f1f5f9;
+    }
+
+    .checkbox-grid input[type="checkbox"] {
+        margin-right: 10px;
+        transform: scale(1.2);
+        accent-color: var(--primary-color);
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
+                <a href="{% url 'candidate:dashboard' %}" class="btn btn-outline-secondary shadow-sm me-3 rounded-circle" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h3 class="mb-0 fw-bold text-dark">{{ title }}</h3>
+                    <p class="text-muted small mb-0 mt-1">Update your specific profile details below</p>
+                </div>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-section">
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger shadow-sm border-0 border-start border-4 border-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="row g-4">
+                        {% for field in form %}
+                            <div class="col-md-{% if field.name == 'bio' or field.name == 'cv_template_preference' or field.name in 'software_skills,preferred_domains,domain_exposure,languages,preferred_industries' %}12{% else %}6{% endif %}">
+
+                                <label class="form-label text-dark">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                                </label>
+
+                                {% if field.name in 'software_skills,preferred_domains,domain_exposure,languages,preferred_industries' %}
+                                    <div class="checkbox-grid">
+                                        {{ field }}
+                                    </div>
+                                    <small class="text-muted mt-2 d-block"><i class="fas fa-check-double me-1 text-primary"></i> Select all relevant options.</small>
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+
+                                {% if field.help_text %}
+                                    <div class="form-text text-muted small mt-1">{{ field.help_text }}</div>
+                                {% endif %}
+
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1 fw-medium">
+                                        <i class="fas fa-exclamation-circle me-1"></i> {{ field.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
+                        <a href="{% url 'candidate:dashboard' %}" class="btn btn-light text-muted fw-bold px-4 py-2">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary px-5 py-2 fw-bold shadow-sm">
+                            <i class="fas fa-save me-2"></i> Save & Update
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

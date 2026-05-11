@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+
+{% block title %}Update Profile & CV | Percept Placements{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+
+<style>
+    body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
+    .form-section { background: #ffffff; padding: 2.5rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 2rem; border: 1px solid #f1f5f9; }
+    .section-header { display: flex; align-items: center; border-bottom: 2px solid #f8fafc; padding-bottom: 15px; margin-bottom: 25px; }
+    .section-icon-wrapper { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-right: 15px; }
+
+    .form-label { font-weight: 600; color: #475569; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+    .form-control, .form-select { border-radius: 10px; border: 1px solid #cbd5e1; padding: 0.75rem 1rem; font-size: 0.95rem; transition: all 0.2s; }
+    .form-control:focus, .form-select:focus { border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+
+    .choices__inner { border-radius: 10px; border: 1px solid #cbd5e1; background-color: #fff; padding: 5px 12px; min-height: 45px; }
+    .is-focused .choices__inner, .is-open .choices__inner { border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+
+    .dynamic-form-row { position: relative; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 20px; background-color: #f8fafc; }
+    .delete-row-btn { position: absolute; top: -12px; right: -12px; width: 30px; height: 30px; border-radius: 50%; background: #ef4444; color: white; border: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); transition: 0.2s; }
+    .delete-row-btn:hover { transform: scale(1.1); background: #dc2626; }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div class="mb-4">
+                <a href="{% url 'candidate:dashboard' %}" class="btn btn-outline-secondary btn-sm fw-bold rounded-pill mb-3">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                </a>
+                <h2 class="fw-bold text-dark mb-1">Build Your Profile & CV</h2>
+                <p class="text-muted">Complete the fields below to power your AI job matches and generate your professional resume.</p>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" id="onboardingForm">
+                {% csrf_token %}
+
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon-wrapper bg-primary bg-opacity-10 text-primary"><i class="fas fa-user-tie"></i></div>
+                        <div>
+                            <h4 class="fw-bold text-dark mb-0">{{ section_title }}</h4>
+                            <p class="text-muted small mb-0">Core professional details and preferences.</p>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        {% for field in profile_form %}
+                            <div class="col-md-6 {% if field.name == 'bio' or field.name == 'domain_exposure' %}col-md-12{% endif %}">
+                                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }} {% if field.field.required %}<span class="text-danger">*</span>{% endif %}</label>
+
+                                {% if field.field.widget.input_type == 'checkbox' %}
+                                    <div class="form-check form-switch mt-2">
+                                        {{ field }}
+                                    </div>
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted mt-1 d-block"><i class="fas fa-info-circle me-1 text-primary opacity-75"></i> {{ field.help_text }}</small>
+                                {% endif %}
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1 fw-bold"><i class="fas fa-exclamation-triangle me-1"></i> {{ field.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon-wrapper bg-success bg-opacity-10 text-success"><i class="fas fa-graduation-cap"></i></div>
+                        <div>
+                            <h4 class="fw-bold text-dark mb-0">Academic Qualifications</h4>
+                            <p class="text-muted small mb-0">Add your degrees and academic background.</p>
+                        </div>
+                    </div>
+
+                    {{ education_formset.management_form }}
+                    <div id="education-formset-container">
+                        {% for form in education_formset %}
+                            <div class="dynamic-form-row education-row">
+                                <div class="row g-3">
+                                    {% for field in form.visible_fields %}
+                                        <div class="col-md-{% if field.name == 'remarks' %}12{% else %}6{% endif %}">
+                                            <label class="form-label">{{ field.label }}</label>
+                                            {{ field }}
+                                            {% if field.errors %}<div class="text-danger small">{{ field.errors.0 }}</div>{% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% if form.instance.pk %}
+                                    <div class="form-check mt-3 text-danger fw-bold">
+                                        {{ form.DELETE }} <label class="form-check-label" for="{{ form.DELETE.id_for_label }}">Delete this entry</label>
+                                    </div>
+                                {% else %}
+                                    <button type="button" class="delete-row-btn" onclick="this.closest('.education-row').remove();"><i class="fas fa-times"></i></button>
+                                {% endif %}
+                                {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="btn btn-outline-success btn-sm fw-bold rounded-pill mt-2" onclick="addForm('education', 'educations')">
+                        <i class="fas fa-plus me-1"></i> Add Education
+                    </button>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon-wrapper bg-warning bg-opacity-10 text-warning"><i class="fas fa-briefcase"></i></div>
+                        <div>
+                            <h4 class="fw-bold text-dark mb-0">Work Experience & Internships</h4>
+                            <p class="text-muted small mb-0">Detail your professional roles or articleship.</p>
+                        </div>
+                    </div>
+
+                    {{ experience_formset.management_form }}
+                    <div id="experience-formset-container">
+                        {% for form in experience_formset %}
+                            <div class="dynamic-form-row experience-row">
+                                <div class="row g-3">
+                                    {% for field in form.visible_fields %}
+                                        {% if field.name != 'is_currently_working' %}
+                                            <div class="col-md-{% if field.name == 'description' %}12{% else %}6{% endif %}">
+                                                <label class="form-label">{{ field.label }}</label>
+                                                {{ field }}
+                                                {% if field.errors %}<div class="text-danger small">{{ field.errors.0 }}</div>{% endif %}
+                                            </div>
+                                        {% else %}
+                                            <div class="col-12 mt-2">
+                                                <div class="form-check form-switch fw-bold text-primary">
+                                                    {{ field }}
+                                                    <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                {% if form.instance.pk %}
+                                    <div class="form-check mt-3 text-danger fw-bold">
+                                        {{ form.DELETE }} <label class="form-check-label" for="{{ form.DELETE.id_for_label }}">Delete this entry</label>
+                                    </div>
+                                {% else %}
+                                    <button type="button" class="delete-row-btn" onclick="this.closest('.experience-row').remove();"><i class="fas fa-times"></i></button>
+                                {% endif %}
+                                {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="btn btn-outline-warning text-dark btn-sm fw-bold rounded-pill mt-2" onclick="addForm('experience', 'experiences')">
+                        <i class="fas fa-plus me-1"></i> Add Experience
+                    </button>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon-wrapper bg-info bg-opacity-10 text-info"><i class="fas fa-award"></i></div>
+                        <div>
+                            <h4 class="fw-bold text-dark mb-0">Certifications & Achievements</h4>
+                            <p class="text-muted small mb-0">Highlight courses, medals, and recognitions.</p>
+                        </div>
+                    </div>
+
+                    {{ achievement_formset.management_form }}
+                    <div id="achievement-formset-container">
+                        {% for form in achievement_formset %}
+                            <div class="dynamic-form-row achievement-row">
+                                <div class="row g-3">
+                                    {% for field in form.visible_fields %}
+                                        <div class="col-md-{% if field.name == 'description' %}12{% else %}6{% endif %}">
+                                            <label class="form-label">{{ field.label }}</label>
+                                            {{ field }}
+                                            {% if field.errors %}<div class="text-danger small">{{ field.errors.0 }}</div>{% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% if form.instance.pk %}
+                                    <div class="form-check mt-3 text-danger fw-bold">
+                                        {{ form.DELETE }} <label class="form-check-label" for="{{ form.DELETE.id_for_label }}">Delete this entry</label>
+                                    </div>
+                                {% else %}
+                                    <button type="button" class="delete-row-btn" onclick="this.closest('.achievement-row').remove();"><i class="fas fa-times"></i></button>
+                                {% endif %}
+                                {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="btn btn-outline-info text-dark btn-sm fw-bold rounded-pill mt-2" onclick="addForm('achievement', 'achievements')">
+                        <i class="fas fa-plus me-1"></i> Add Achievement
+                    </button>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-5 mb-5 pb-5">
+                    <a href="{% url 'candidate:dashboard' %}" class="btn btn-light text-muted fw-bold px-4 py-3 rounded-3 shadow-sm border">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary px-5 py-3 fw-bold rounded-3 shadow-lg" style="font-size: 1.1rem;">
+                        <i class="fas fa-save me-2"></i> Save & Generate CV
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const multipleSelects = document.querySelectorAll('.choices-multiple');
+        multipleSelects.forEach(select => {
+            new Choices(select, {
+                removeItemButton: true,
+                searchPlaceholderValue: 'Type to search...',
+                shouldSort: false
+            });
+        });
+    });
+
+    function addForm(sectionType, prefix) {
+        const container = document.getElementById(`${sectionType}-formset-container`);
+        const totalFormsInput = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+        let formCount = parseInt(totalFormsInput.value);
+
+        const rows = container.getElementsByClassName(`${sectionType}-row`);
+        if (rows.length === 0) return;
+
+        const emptyForm = rows[0].cloneNode(true);
+        emptyForm.querySelectorAll('input, select, textarea').forEach(input => {
+            if (input.name) {
+                input.name = input.name.replace(`-${0}-`, `-${formCount}-`);
+                input.id = input.id.replace(`-${0}-`, `-${formCount}-`);
+            }
+            if (input.type !== 'hidden' && input.type !== 'checkbox') input.value = '';
+            if (input.type === 'checkbox') input.checked = false;
+        });
+
+        const deleteBtn = emptyForm.querySelector('.delete-row-btn');
+        if (deleteBtn) deleteBtn.style.display = 'flex';
+
+        emptyForm.style.opacity = '0';
+        emptyForm.style.transform = 'translateY(15px)';
+        container.appendChild(emptyForm);
+
+        setTimeout(() => {
+            emptyForm.style.transition = 'all 0.4s ease';
+            emptyForm.style.opacity = '1';
+            emptyForm.style.transform = 'translateY(0)';
+        }, 10);
+
+        totalFormsInput.value = formCount + 1;
+    }
+</script>
+{% endblock %}

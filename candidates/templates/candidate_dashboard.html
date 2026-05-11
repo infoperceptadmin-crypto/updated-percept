@@ -1,0 +1,648 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard | Percept Placements{% endblock %}
+
+{% block content %}
+<style>
+    /* =========================================
+       MODERN DASHBOARD STYLING
+       ========================================= */
+    :root {
+        --primary-color: #2563eb; /* Brand Blue */
+        --secondary-bg: #f3f4f6;
+        --sidebar-width: 260px;
+        --card-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    body {
+        background-color: var(--secondary-bg);
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    /* =========================================
+       ✅ FIX: PREVENT NAVBAR & SIDEBAR OVERLAP
+       ========================================= */
+    @media (min-width: 768px) {
+        /* Pushes the top navbar to the right so it doesn't go under the sidebar */
+        .navbar {
+            margin-left: var(--sidebar-width) !important;
+            width: calc(100% - var(--sidebar-width)) !important;
+        }
+        /* Hides the top logo because the sidebar already displays it */
+        .navbar .navbar-brand {
+            display: none !important;
+        }
+        /* Pushes alert popups to the right so they don't get covered */
+        .alert-container {
+            margin-left: var(--sidebar-width) !important;
+        }
+    }
+
+    /* --- Sidebar --- */
+    .sidebar {
+        width: var(--sidebar-width);
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        background: white;
+        border-right: 1px solid #e5e7eb;
+        padding: 20px;
+        z-index: 1050;
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar-brand {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        margin-bottom: 2.5rem;
+        padding-left: 5px;
+    }
+
+    .sidebar-logo {
+        max-height: 35px;
+        width: auto;
+        object-fit: contain;
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
+
+    .sidebar-brand-text {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        letter-spacing: -0.5px;
+        text-transform: uppercase;
+        line-height: 1.2;
+        word-wrap: break-word;
+        white-space: normal;
+    }
+
+    .nav-link-custom {
+        color: #64748b;
+        font-weight: 600;
+        padding: 12px 15px;
+        border-radius: 10px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        margin-bottom: 5px;
+    }
+
+    .nav-link-custom:hover, .nav-link-custom.active {
+        background-color: #eff6ff;
+        color: var(--primary-color);
+    }
+
+    .nav-link-custom i { width: 24px; margin-right: 10px; }
+
+    /* --- Main Content --- */
+    .main-content {
+        margin-left: var(--sidebar-width);
+        padding: 2rem;
+        transition: margin-left 0.3s ease;
+    }
+
+    /* --- Cards --- */
+    .dashboard-card {
+        background: white;
+        border: none;
+        border-radius: 16px;
+        box-shadow: var(--card-shadow);
+        height: 100%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+    }
+
+    /* --- Badges & Elements --- */
+    .badge-soft-primary { background-color: #dbeafe; color: #1e40af; }
+    .badge-soft-success { background-color: #dcfce7; color: #166534; }
+    .badge-soft-warning { background-color: #fef9c3; color: #854d0e; }
+    .badge-soft-info    { background-color: #cffafe; color: #155e75; }
+    .badge-soft-secondary { background-color: #f1f5f9; color: #475569; }
+
+    .badge-pill {
+        padding: 0.5em 1em;
+        border-radius: 50rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    /* --- Progress Bar --- */
+    .completion-card {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+    }
+
+    /* --- Custom Button Hover --- */
+    .btn-hover-fill:hover {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+        border-color: var(--primary-color) !important;
+    }
+
+    /* --- Mobile Toggler --- */
+    .sidebar-overlay {
+        position: fixed; top:0; left:0; width:100%; height:100%;
+        background: rgba(0,0,0,0.5); z-index: 1040; display: none;
+    }
+
+    @media (max-width: 768px) {
+        .sidebar { transform: translateX(-100%); }
+        .sidebar.show { transform: translateX(0); }
+        .main-content { margin-left: 0; padding: 1.5rem; }
+        .sidebar-overlay.show { display: block; }
+    }
+</style>
+
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<div class="sidebar" id="sidebar">
+    <a href="/" class="sidebar-brand">
+        <img src="{% static 'img/percept_logo.png' %}" alt="Logo" class="sidebar-logo" onerror="this.style.display='none';">
+        <span class="sidebar-brand-text">Percept Placements</span>
+    </a>
+
+    <div class="d-flex flex-column h-100">
+        <ul class="nav flex-column flex-grow-1">
+            <li class="nav-item">
+                <a href="{% url 'candidate:dashboard' %}" class="nav-link-custom active">
+                    <i class="fas fa-th-large"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'candidate:onboarding' %}" class="nav-link-custom">
+                    <i class="fas fa-user-edit"></i> Edit Profile
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'candidate:profile_detail' %}" class="nav-link-custom">
+                    <i class="fas fa-id-card"></i> Public CV
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'browse_jobs' %}" class="nav-link-custom">
+                    <i class="fas fa-briefcase"></i> Find Jobs
+                </a>
+            </li>
+
+        </ul>
+        <div class="mt-auto border-top pt-3">
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="nav-link-custom text-danger w-100 bg-transparent border-0">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-light d-md-none me-3 shadow-sm" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div>
+                <h2 class="fw-bold text-dark mb-0">Hello, {{ user.full_name|default:user.username }}! 👋</h2>
+                <div class="mt-1">
+                    <span class="text-muted small">Current Stage:</span>
+                    <span class="badge badge-soft-primary badge-pill ms-1">
+                        {{ user.get_ca_status_display|default:"Status Not Set" }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            {% if user.ca_status != 'COMMERCE_GRAD' %}
+            <button class="btn btn-success fw-bold shadow-sm px-3" data-bs-toggle="modal" data-bs-target="#upgradeModal">
+                <i class="fas fa-arrow-up me-2"></i> <span class="d-none d-sm-inline">Level Up</span>
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card dashboard-card completion-card mb-4 border-0">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mb-3 mb-lg-0">
+                    <h4 class="fw-bold">Your Profile is {{ completion_percent }}% Complete</h4>
+                    <p class="mb-3 opacity-90 small">
+                        Complete profiles rank <strong>3x higher</strong> in recruiter searches. Add your skills and details to stand out.
+                    </p>
+                    <div class="progress bg-white bg-opacity-25" style="height: 8px; border-radius: 10px;">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ completion_percent }}%"></div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center text-lg-end">
+                    <a href="{% url 'candidate:onboarding' %}" class="btn btn-light text-primary fw-bold px-4 shadow-sm">
+                        <i class="fas fa-magic me-2"></i> Update Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-5">
+            <div class="card dashboard-card h-100">
+                <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+                    <h6 class="fw-bold text-uppercase text-muted small mb-0"><i class="fas fa-user-shield me-2"></i>Quick Snapshot</h6>
+                </div>
+                <div class="card-body p-4">
+                    <ul class="list-group list-group-flush">
+                        {% if user.ca_status != 'COMMERCE_GRAD' %}
+                        <li class="list-group-item border-0 px-0 d-flex justify-content-between align-items-center">
+                            <span class="text-muted">ICAI Reg. No.</span>
+                            <span class="fw-bold text-dark font-monospace">{{ profile.icai_reg_num|default:"--" }}</span>
+                        </li>
+                        {% endif %}
+                        <li class="list-group-item border-0 px-0 d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Availability</span>
+                            {% if profile.availability %}
+                                <span class="badge badge-soft-info">{{ profile.get_availability_display }}</span>
+                            {% else %}
+                                <span class="text-muted small">--</span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card dashboard-card h-100">
+                <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+                    <h6 class="fw-bold text-uppercase text-muted small mb-0"><i class="fas fa-layer-group me-2"></i>Competencies</h6>
+                </div>
+                <div class="card-body p-4">
+
+                    <div class="mb-4">
+                        <label class="small fw-bold text-muted mb-2 d-block">Software Skills</label>
+                        {% for skill in profile.software_skills.all %}
+                            <span class="badge badge-soft-primary mb-1 me-1">{{ skill.skill_name }}</span>
+                        {% empty %}
+                            <span class="text-muted small fst-italic">No software skills added.</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="small fw-bold text-muted mb-2 d-block">Languages</label>
+                        {% for lang in profile.languages %}
+                            <span class="badge badge-soft-secondary mb-1 me-1">{{ lang }}</span>
+                        {% empty %}
+                            <span class="text-muted small fst-italic">No languages added.</span>
+                        {% endfor %}
+                    </div>
+
+                    {% if profile.preferred_industries %}
+                    <div>
+                        <label class="small fw-bold text-muted mb-2 d-block">Preferred Industries</label>
+                        {% for ind in profile.preferred_industries %}
+                            <span class="badge badge-soft-info mb-1 me-1">{{ ind }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+        <h5 class="fw-bold text-dark mb-0">
+            <span class="bg-warning bg-opacity-10 text-warning p-2 rounded-circle me-2 d-inline-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                <i class="fas fa-bolt"></i>
+            </span>
+            Top Job Matches For You
+        </h5>
+        <a href="{% url 'browse_jobs' %}" class="btn btn-sm btn-outline-primary fw-bold shadow-sm">View All Jobs <i class="fas fa-arrow-right ms-1"></i></a>
+    </div>
+
+    {% if top_matches %}
+    <div class="row g-4 mb-4">
+        {% for job in top_matches %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card dashboard-card h-100 p-4 border-0 position-relative" style="border-top: 4px solid #10b981 !important;">
+
+                <div class="position-absolute top-0 end-0 mt-3 me-3">
+                    <span class="badge bg-success bg-gradient px-3 py-2 shadow-sm fs-6 rounded-pill">
+                        <i class="fas fa-bullseye me-1"></i> {{ job.match_score }}% Match
+                    </span>
+                </div>
+
+                <div class="card-body p-0 mt-2">
+                    <h5 class="fw-bold mb-2 text-dark pe-5" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" title="{{ job.title }}">{{ job.title }}</h5>
+
+                    <p class="text-muted small fw-medium mb-3">
+                        {% if job.firm %}
+                            <i class="fas fa-building text-secondary me-1"></i> {{ job.firm.name }}
+                        {% else %}
+                            <i class="fas fa-briefcase text-secondary me-1"></i> {{ job.corporate.name }}
+                        {% endif %}
+                        <span class="mx-1">•</span> <i class="fas fa-map-marker-alt text-danger me-1"></i> {{ job.location }}
+                    </p>
+
+                    <div class="mb-3 d-flex flex-wrap gap-1">
+                        {% for d in job.domains.all %}
+                            <span class="badge bg-light text-dark border border-secondary border-opacity-25 px-2 py-1">
+                                <i class="fas fa-layer-group text-info me-1"></i> {{ d.domain_name }}
+                            </span>
+                        {% empty %}
+                            <span class="badge bg-light text-dark border border-secondary border-opacity-25 px-2 py-1">
+                                General Domain
+                            </span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        <small class="text-muted d-block mb-2 fw-bold text-uppercase letter-spacing-1" style="font-size: 0.7rem;">Skill Analysis</small>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for skill in job.matched_skills_list|slice:":3" %}
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">
+                                    <i class="fas fa-check me-1"></i> {{ skill }}
+                                </span>
+                            {% endfor %}
+                            {% for skill in job.missing_skills_list|slice:":2" %}
+                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1">
+                                    <i class="fas fa-times me-1"></i> {{ skill }}
+                                </span>
+                            {% endfor %}
+
+                            {% if job.matched_skills_list|length > 3 or job.missing_skills_list|length > 2 %}
+                                <span class="badge bg-light text-muted border px-2 py-1">+ more</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-auto">
+                    <a href="{% url 'job_detail' job.id %}" class="btn btn-light w-100 fw-bold text-primary border border-primary border-opacity-25 btn-hover-fill transition-all">
+                        View Details & Apply
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card dashboard-card border-0 mb-4 bg-primary bg-opacity-10" style="border: 1px dashed rgba(37, 99, 235, 0.3) !important;">
+        <div class="card-body text-center p-5">
+            <div class="bg-white p-3 rounded-circle d-inline-block shadow-sm mb-3">
+                <i class="fas fa-magic fa-2x text-primary"></i>
+            </div>
+            <h5 class="fw-bold text-dark">Unlock AI Job Matches</h5>
+            <p class="text-muted mb-4 mx-auto" style="max-width: 600px;">
+                Complete your profile by adding your preferred domains and software skills to start seeing highly personalized, AI-driven job recommendations right here.
+            </p>
+            <a href="{% url 'candidate:onboarding' %}" class="btn btn-primary fw-bold px-5 shadow-sm rounded-pill">Update Profile Now</a>
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if user.ca_status == 'COMMERCE_GRAD' %}
+    <h5 class="fw-bold text-dark mb-3 mt-5">Professional Overview</h5>
+    <div class="card dashboard-card p-4 border-start border-4 border-success">
+        <div class="d-flex align-items-center mb-4">
+            <div class="bg-success bg-opacity-10 p-3 rounded-circle text-success me-3">
+                <i class="fas fa-user-graduate fa-2x"></i>
+            </div>
+            <div>
+                <h5 class="fw-bold mb-1 text-dark">Commerce Professional</h5>
+                <p class="text-muted small mb-0">Your profile is active and ready for job matching.</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <small class="text-muted d-block mb-1">Preferred Roles</small>
+                <span class="fw-bold text-dark">{{ profile.get_preferred_job_roles_display|default:"Not specified" }}</span>
+            </div>
+            <div class="col-md-4">
+                <small class="text-muted d-block mb-1">Employment Type</small>
+                <span class="fw-bold text-dark">{{ profile.get_employment_type_display|default:"Not specified" }}</span>
+            </div>
+            <div class="col-md-4">
+                <small class="text-muted d-block mb-1">Target Industries</small>
+                <div class="d-flex flex-wrap gap-1">
+                    {% for ind in profile.preferred_industries|slice:":2" %}
+                        <span class="badge badge-soft-info">{{ ind }}</span>
+                    {% empty %}
+                        <span class="small fw-bold">Not specified</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="mt-4 pt-3 border-top">
+            <a href="{% url 'candidate:onboarding' %}" class="btn btn-primary btn-sm px-4">Update Details</a>
+        </div>
+    </div>
+
+    {% else %}
+    <h5 class="fw-bold text-dark mb-3 mt-5">Your Career Roadmap</h5>
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card dashboard-card p-3 h-100 {% if user.ca_status == 'FOUNDATION' %}border border-2 border-primary{% endif %}">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-success bg-opacity-10 p-2 rounded-3 text-success me-3">
+                            <i class="fas fa-graduation-cap fa-lg"></i>
+                        </div>
+                        <h6 class="fw-bold mb-0 text-dark">Foundation</h6>
+                        {% if user.ca_status == 'FOUNDATION' %}<span class="badge badge-soft-primary ms-auto">Current</span>{% endif %}
+                    </div>
+
+                    {% if profile.foundation_year %}
+                        <div class="row g-2">
+                            <div class="col-6 bg-light rounded p-2 text-center">
+                                <small class="text-muted d-block" style="font-size: 0.75rem;">Year</small>
+                                <span class="fw-bold text-dark">{{ profile.foundation_year }}</span>
+                            </div>
+                            <div class="col-6 bg-light rounded p-2 text-center">
+                                <small class="text-muted d-block" style="font-size: 0.75rem;">Attempts</small>
+                                <span class="fw-bold text-dark">{{ profile.foundation_attempts }}</span>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <a href="{% url 'candidate:onboarding' %}" class="btn btn-sm btn-outline-primary w-100">Add Details</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card p-3 h-100 {% if user.ca_status == 'INTERMEDIATE' %}border border-2 border-primary{% endif %}">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-info bg-opacity-10 p-2 rounded-3 text-info me-3">
+                            <i class="fas fa-book-open fa-lg"></i>
+                        </div>
+                        <h6 class="fw-bold mb-0 text-dark">Intermediate</h6>
+                        {% if user.ca_status == 'INTERMEDIATE' %}<span class="badge badge-soft-primary ms-auto">Current</span>{% endif %}
+                    </div>
+
+                    {% if profile.inter_attempts_g1 or profile.inter_attempts_g2 %}
+                        <div class="row g-2 mb-3">
+                            <div class="col-6 bg-light rounded p-2 text-center">
+                                <small class="text-muted d-block" style="font-size: 0.75rem;">Group 1</small>
+                                <span class="fw-bold">{{ profile.inter_attempts_g1|default:"--" }} Att.</span>
+                            </div>
+                            <div class="col-6 bg-light rounded p-2 text-center">
+                                <small class="text-muted d-block" style="font-size: 0.75rem;">Group 2</small>
+                                <span class="fw-bold">{{ profile.inter_attempts_g2|default:"--" }} Att.</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Pref. City</small>
+                            <span class="badge badge-soft-secondary">{{ profile.preferred_articleship_city|default:"Any" }}</span>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            {% if user.ca_status != 'FOUNDATION' %}
+                                <a href="{% url 'candidate:onboarding' %}" class="btn btn-sm btn-outline-primary w-100">Add Details</a>
+                            {% else %}
+                                <button disabled class="btn btn-sm btn-light w-100 text-muted"><i class="fas fa-lock me-1"></i> Locked</button>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card p-3 h-100 border-start border-4 border-primary">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary bg-opacity-10 p-2 rounded-3 text-primary me-3">
+                            <i class="fas fa-briefcase fa-lg"></i>
+                        </div>
+                        <h6 class="fw-bold mb-0 text-dark">Current Stage</h6>
+                    </div>
+
+                    {% if user.ca_status == 'ARTICLE_ONGOING' %}
+                        <div class="mb-2">
+                            <small class="text-muted d-block">Articleship Started</small>
+                            <span class="fw-bold">{{ profile.articleship_start_date|date:"d M Y"|default:"--" }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="badge badge-soft-info">{{ profile.current_firm_city }}</span>
+                            <span class="badge badge-soft-warning">{{ profile.get_seeking_type_display }}</span>
+                        </div>
+
+                    {% elif user.ca_status == 'ARTICLE_COMPLETED' %}
+                        <div class="text-center mb-3">
+                            <span class="badge badge-soft-success px-3 py-2 mb-2">Articleship Completed</span>
+                            <p class="small text-muted mb-0">Ended: {{ profile.articleship_end_date|date:"M Y" }}</p>
+                        </div>
+                        <p class="small mb-1 text-muted">Exposure:</p>
+
+                        <div class="d-flex flex-wrap gap-1">
+                             {% for domain_name in profile.domain_exposure|slice:":2" %}
+                                <span class="badge badge-soft-secondary">{{ domain_name }}</span>
+                             {% empty %}
+                                <span class="small text-muted">--</span>
+                             {% endfor %}
+                        </div>
+
+                    {% elif user.ca_status == 'FINAL_APPEARED' %}
+                         <div class="row g-2 mb-2">
+                             <div class="col-6 bg-light rounded p-2 text-center">
+                                 <small class="text-muted d-block" style="font-size: 0.75rem;">Status</small>
+                                 <span class="fw-bold text-warning">{{ profile.get_final_group_appeared_display }}</span>
+                             </div>
+                             <div class="col-6 bg-light rounded p-2 text-center">
+                                 <small class="text-muted d-block" style="font-size: 0.75rem;">Attempts</small>
+                                 <span class="fw-bold">{{ profile.final_attempts }}</span>
+                             </div>
+                         </div>
+                         <small class="text-muted d-block">Career Goal</small>
+                         <span class="fw-bold text-primary small">{{ profile.get_career_preference_display }}</span>
+
+                    {% else %}
+                        <div class="text-center py-4">
+                            <p class="text-muted small mb-2">
+                                Unlock this stage by upgrading your status.
+                            </p>
+                        </div>
+                    {% endif %}
+
+                    {% if user.ca_status == 'ARTICLE_ONGOING' or user.ca_status == 'ARTICLE_COMPLETED' or user.ca_status == 'FINAL_APPEARED' %}
+                        <a href="{% url 'candidate:onboarding' %}" class="btn btn-primary btn-sm w-100 mt-3 btn-hover-fill">Edit Details</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %} </div>
+
+<div class="modal fade" id="upgradeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form action="{% url 'candidate:upgrade_status' %}" method="POST">
+            {% csrf_token %}
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-rocket me-2"></i> Level Up Career</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center mb-4">
+                         <div class="bg-success bg-opacity-10 text-success p-3 rounded-circle d-inline-block mb-2">
+                             <i class="fas fa-trophy fa-2x"></i>
+                         </div>
+                         <p class="text-muted">Moving to the next level will unlock new profile fields tailored to your new status.</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-uppercase text-muted">Select New Status</label>
+                        <select name="new_status" class="form-select form-select-lg shadow-none border-success">
+                            <option value="" selected disabled>-- Choose Next Step --</option>
+                            {% if user.ca_status == 'FOUNDATION' %}
+                                <option value="INTERMEDIATE">Passed Foundation (Go to Intermediate)</option>
+                            {% endif %}
+                            {% if user.ca_status == 'FOUNDATION' or user.ca_status == 'INTERMEDIATE' %}
+                                <option value="ARTICLE_ONGOING">Started Articleship</option>
+                            {% endif %}
+                            {% if user.ca_status == 'ARTICLE_ONGOING' %}
+                                <option value="ARTICLE_COMPLETED">Completed Articleship</option>
+                            {% endif %}
+                            {% if user.ca_status == 'ARTICLE_COMPLETED' %}
+                                <option value="FINAL_APPEARED">Appeared for CA Final</option>
+                            {% endif %}
+                            <option disabled>──────────</option>
+                            <option value="INTERMEDIATE">Correction: Intermediate</option>
+                            <option value="FOUNDATION">Correction: Foundation</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success px-4 fw-bold">Update & Continue</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('show');
+        document.querySelector('.sidebar-overlay').classList.toggle('show');
+    }
+</script>
+{% endblock %}
+

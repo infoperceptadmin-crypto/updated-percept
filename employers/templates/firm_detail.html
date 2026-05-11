@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ firm.name }} | Firm Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { border: none; border-radius: 12px; }
+        .section-header { border-bottom: 2px solid #0d6efd; padding-bottom: 10px; margin-bottom: 20px; }
+        .badge-spec { background-color: #e9ecef; color: #495057; border: 1px solid #dee2e6; margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">{{ firm.name }}</h1>
+        <p class="lead text-muted">ICAI Reg No: {{ firm.registration_number }} | {{ firm.city_area }}</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card shadow-sm p-4">
+                <h4 class="section-header">Firm Details</h4>
+                <div class="row">
+                    <div class="col-sm-6 mb-3">
+                        <label class="text-muted d-block small uppercase">No. of Partners</label>
+                        <span class="h5">{{ firm.no_of_partners }}</span>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label class="text-muted d-block small uppercase">Paid Assistants</label>
+                        <span class="h5">{{ firm.no_of_paid_assistants }}</span>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label class="text-muted d-block small uppercase">Articleship Seats Available</label>
+                        <span class="h5 text-success">{{ firm.articleship_seats }}</span>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label class="text-muted d-block small uppercase">Jobs Available</label>
+                        <span class="h5 text-primary">{{ firm.jobs_available }}</span>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <label class="text-muted d-block small">Partner Details</label>
+                    <p>{{ firm.partner_details|linebreaks }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card shadow-sm p-4 h-100">
+                <h4 class="section-header">Firm Specialization</h4>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for spec in specializations %}
+                        <span class="badge badge-spec p-3 rounded-pill">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>{{ spec|title }}
+                        </span>
+                    {% empty %}
+                        <p class="text-muted">No specialization listed.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card shadow-sm p-4">
+                <h4 class="section-header">Working Style & Policy</h4>
+                <div class="row align-items-center">
+                    <div class="col-md-3 text-center border-end">
+                        <p class="text-muted mb-1">Exposure Level</p>
+                        <span class="badge {% if firm.exposure_level == 'High' %}bg-danger{% else %}bg-warning text-dark{% endif %} fs-6">
+                            {{ firm.exposure_level }}
+                        </span>
+                    </div>
+                    <div class="col-md-3 text-center border-end">
+                        <p class="text-muted mb-1">Work Hours</p>
+                        <p class="fw-bold mb-0">{{ firm.work_hours }}</p>
+                    </div>
+                    <div class="col-md-3 text-center border-end">
+                        <p class="text-muted mb-1">Stipend Range</p>
+                        <p class="fw-bold text-success mb-0">{{ firm.stipend_range }}</p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <p class="text-muted mb-1">Mentorship</p>
+                        <p class="fw-bold mb-0">
+                            {% if firm.mentorship_available %}
+                                <span class="text-success">✅ Available</span>
+                            {% else %}
+                                <span class="text-muted">❌ Not Provided</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <hr class="my-4">
+                <div>
+                    <h6 class="fw-bold">Leave Policy</h6>
+                    <p class="text-secondary">{{ firm.leave_policy }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 text-center">
+        <a href="#" class="btn btn-outline-secondary px-5">Back to Listings</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

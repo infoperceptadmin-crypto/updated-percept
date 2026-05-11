@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Find Jobs | Percept Placements{% endblock %}
+
+{% block content %}
+<style>
+    /* Custom Styling for Job Cards */
+    .job-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid #eef2f6;
+        background-color: #fff;
+    }
+    .job-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        border-color: #3b82f6;
+    }
+    
+    /* Green Match Badge for Recommended Jobs (Large) */
+    .match-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #dcfce7;
+        color: #166534;
+        font-weight: 700;
+        font-size: 0.75rem;
+        padding: 6px 12px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Organization Logo Placeholder */
+    .org-logo-placeholder {
+        width: 50px;
+        height: 50px;
+        background-color: #f1f5f9;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 1.4rem;
+    }
+
+    /* Small Tags for Location/Domain */
+    .meta-tag {
+        background-color: #f8f9fa;
+        color: #495057;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        border: 1px solid #e9ecef;
+    }
+
+    /* Make title links look clean */
+    .job-title-link {
+        text-decoration: none;
+        color: inherit;
+    }
+    .job-title-link:hover {
+        color: #0d6efd !important;
+        text-decoration: underline;
+    }
+</style>
+
+<div class="container py-5">
+
+    <div class="row mb-5 align-items-end">
+        <div class="col-lg-5">
+            <h2 class="fw-bold text-dark display-6">Find Your Next Opportunity</h2>
+            <p class="text-muted mb-0 fs-5">Browsing <strong>{{ total_jobs }}</strong> active openings for CAs and Trainees.</p>
+        </div>
+        <div class="col-lg-7 text-md-end mt-3 mt-lg-0">
+            <form method="GET" action="{% url 'browse_jobs' %}" class="d-flex shadow-sm rounded-3 bg-white p-1 border">
+
+                <div class="input-group border-0">
+                    <span class="input-group-text bg-white border-0 text-muted"><i class="fas fa-search"></i></span>
+                    <input type="text" name="q" value="{{ search_query }}" class="form-control border-0 bg-white" placeholder="Job title, domain or firm..." style="box-shadow: none;">
+                </div>
+
+                <div class="d-none d-md-block border-start my-2"></div>
+
+                <div class="input-group border-0" style="max-width: 200px;">
+                    <span class="input-group-text bg-white border-0 text-danger"><i class="fas fa-map-marker-alt"></i></span>
+                    <input type="text" name="location" value="{{ location_query }}" class="form-control border-0 bg-white" placeholder="City..." style="box-shadow: none;">
+                </div>
+
+                <button type="submit" class="btn btn-primary px-4 fw-bold rounded-2">Find</button>
+
+                {% if search_query or location_query %}
+                    <a href="{% url 'browse_jobs' %}" class="btn btn-light border ms-1 rounded-2" title="Clear Filters"><i class="fas fa-times"></i></a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    {% if recommended_jobs %}
+    <div class="mb-5">
+        <h5 class="fw-bold text-dark mb-4 d-flex align-items-center">
+            <i class="fas fa-star text-warning me-2"></i> Recommended For You
+        </h5>
+        <div class="row g-4">
+            {% for job in recommended_jobs %}
+            <div class="col-lg-6">
+                <div class="card job-card h-100 p-4 border-start border-4 border-success position-relative rounded-3">
+
+                    <div class="match-badge">
+                        <i class="fas fa-bolt me-1"></i> {{ job.match_score }}% Match
+                    </div>
+
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="org-logo-placeholder me-3 shadow-sm">
+                            {% if job.firm %}{{ job.firm.name|slice:":1" }}{% else %}{{ job.corporate.name|slice:":1" }}{% endif %}
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">
+                                <a href="{% url 'job_detail' job.id %}" class="job-title-link text-primary">{{ job.title }}</a>
+                            </h5>
+                            <p class="text-muted mb-0 fw-medium small text-uppercase">
+                                {% if job.firm %}
+                                    <i class="fas fa-building me-1"></i> {{ job.firm.name }}
+                                {% else %}
+                                    <i class="fas fa-briefcase me-1"></i> {{ job.corporate.name }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        <span class="meta-tag"><i class="fas fa-map-marker-alt me-1 text-danger"></i> {{ job.location }}</span>
+                        {% for d in job.domains.all %}
+                            <span class="meta-tag"><i class="fas fa-layer-group me-1 text-info"></i> {{ d.domain_name }}</span>
+                        {% endfor %}
+                        <span class="meta-tag"><i class="fas fa-rupee-sign me-1 text-success"></i> {{ job.compensation }}</span>
+                    </div>
+
+                    <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+                        <small class="text-muted fw-bold" style="font-size: 0.8rem;">
+                            <i class="far fa-clock me-1"></i> Posted {{ job.posted_on|timesince }} ago
+                        </small>
+                        <a href="{% url 'job_detail' job.id %}" class="btn btn-success btn-sm fw-bold px-3 shadow-sm">
+                            View & Apply <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if all_jobs_list %}
+    <h5 class="fw-bold text-dark mb-4 d-flex align-items-center {% if recommended_jobs %}mt-5{% endif %}">
+        <i class="fas fa-globe text-primary me-2"></i>
+        {% if search_query or location_query %}All Search Results{% else %}Explore All Jobs{% endif %}
+    </h5>
+
+    <div class="row g-4">
+        {% for job in all_jobs_list %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card job-card h-100 p-3 rounded-3 position-relative">
+
+                {% if job.match_score is not None %}
+                    <div class="position-absolute top-0 end-0 mt-2 me-2">
+                        <span class="badge {% if job.match_score >= 50 %}bg-success{% elif job.match_score >= 30 %}bg-warning text-dark{% else %}bg-danger{% endif %} fw-bold shadow-sm" style="font-size: 0.7rem;">
+                            {{ job.match_score }}% Match
+                        </span>
+                    </div>
+                {% endif %}
+
+                <div class="d-flex align-items-center mb-3">
+                    <div class="org-logo-placeholder me-3" style="width: 45px; height: 45px; font-size: 1.1rem;">
+                         {% if job.firm %}{{ job.firm.name|slice:":1" }}{% else %}{{ job.corporate.name|slice:":1" }}{% endif %}
+                    </div>
+                    <div class="overflow-hidden pe-3"> <h6 class="fw-bold mb-0 text-truncate" title="{{ job.title }}">
+                            <a href="{% url 'job_detail' job.id %}" class="job-title-link text-dark">{{ job.title }}</a>
+                        </h6>
+                        <small class="text-muted text-truncate d-block">
+                            {% if job.firm %}{{ job.firm.name }}{% else %}{{ job.corporate.name }}{% endif %}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="mb-3 d-flex flex-wrap gap-2">
+                    <span class="badge bg-light text-dark border fw-normal"><i class="fas fa-map-marker-alt me-1 text-danger"></i> {{ job.location }}</span>
+                    {% for d in job.domains.all %}
+                        <span class="badge bg-light text-dark border fw-normal"><i class="fas fa-layer-group text-info me-1"></i> {{ d.domain_name }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-auto d-flex justify-content-between align-items-center">
+                    <small class="text-muted" style="font-size: 0.75rem;">{{ job.posted_on|date:"d M" }}</small>
+                    <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-primary btn-sm px-3 fw-bold">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
+    {% if not all_jobs_list %}
+    <div class="row mt-4">
+        <div class="col-12 text-center py-5">
+            <div class="bg-white p-5 rounded-3 shadow-sm border">
+                <i class="fas fa-search fa-3x text-secondary mb-3 opacity-50"></i>
+                <h4 class="fw-bold text-dark">No jobs found</h4>
+                <p class="text-muted">We couldn't find any jobs matching your specific criteria right now.</p>
+                <a href="{% url 'browse_jobs' %}" class="btn btn-primary mt-2">Clear Filters</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

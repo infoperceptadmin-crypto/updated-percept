@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ firm.name }} | Firm Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f5f7fb;
+        }
+        .top-banner {
+            background: linear-gradient(120deg, #0d6efd, #4f8cff);
+            color: white;
+            border-radius: 18px;
+            padding: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            height: 100%;
+        }
+        .stat-icon {
+            font-size: 26px;
+            color: #0d6efd;
+            margin-bottom: 8px;
+        }
+        .section-card {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+        }
+        .chip {
+            background: #eef2ff;
+            color: #1e40af;
+            padding: 8px 14px;
+            border-radius: 50px;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px;
+        }
+        .label {
+            font-size: 13px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container py-5">
+
+    <!-- HEADER -->
+    <div class="top-banner mb-4 shadow">
+        <h2 class="fw-bold mb-1">{{ firm.name }}</h2>
+        <p class="mb-0">
+            <i class="bi bi-award-fill"></i> {{ firm.registration_number }} &nbsp; | &nbsp;
+            <i class="bi bi-geo-alt-fill"></i> {{ firm.city_area }} |  <i class="bi bi-telephone-fill"></i> {{ firm.phone_number }}
+
+        </p>
+    </div>
+
+    <!-- STATS -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card shadow-sm">
+                <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+                <div class="label">Partners</div>
+                <h5 class="fw-bold">{{ firm.no_of_partners }}</h5>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card shadow-sm">
+                <div class="stat-icon"><i class="bi bi-person-badge-fill"></i></div>
+                <div class="label">Paid Assistants</div>
+                <h5 class="fw-bold">{{ firm.no_of_paid_assistants }}</h5>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card shadow-sm">
+                <div class="stat-icon"><i class="bi bi-mortarboard-fill"></i></div>
+                <div class="label">Articleship Positioms</div>
+                <h5 class="fw-bold text-success">{{ firm.articleship_seats }}</h5>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card shadow-sm">
+                <div class="stat-icon"><i class="bi bi-briefcase-fill"></i></div>
+                <div class="label">Jobs Available</div>
+                <h5 class="fw-bold">{{ firm.jobs_available }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- LEFT -->
+        <div class="col-lg-8">
+            <div class="section-card shadow-sm mb-4">
+                <h5 class="fw-bold mb-3">Partner Details</h5>
+                <p class="text-muted">{{ firm.partner_details|linebreaks }}</p>
+            </div>
+
+            <div class="section-card shadow-sm">
+                <h5 class="fw-bold mb-3">Work Culture & Policies</h5>
+
+                <div class="row text-center mb-3">
+                    <div class="col-md-4">
+                        <div class="label">Exposure Level</div>
+                        <span class="badge bg-danger">{{ firm.exposure_level }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="label">Work Hours</div>
+                        <p class="fw-bold mb-0">{{ firm.work_hours }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="label">Stipend Range</div>
+                        <p class="fw-bold text-success mb-0">{{ firm.stipend_range }}</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <p>
+                    <b>Mentorship:</b>
+                    {% if firm.mentorship_available %}
+                        <span class="text-success">Available</span>
+                    {% else %}
+                        <span class="text-danger">Not Available</span>
+                    {% endif %}
+                </p>
+
+                <p><b>Leave Policy:</b> {{ firm.leave_policy }}</p>
+            </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-4">
+            <div class="section-card shadow-sm h-100">
+                <h5 class="fw-bold mb-3">Firm Specialization</h5>
+
+                {% for spec in specializations %}
+                    <span class="chip">
+                        <i class="bi bi-check-circle-fill me-1"></i>
+                        {{ spec|title }}
+                    </span>
+                {% empty %}
+                    <p class="text-muted">No specialization provided.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BACK -->
+    <div class="text-center mt-5">
+        <a href="{% url 'company_dashboard' %}" class="btn btn-outline-primary px-5">
+            ← Back to company_dashboard
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

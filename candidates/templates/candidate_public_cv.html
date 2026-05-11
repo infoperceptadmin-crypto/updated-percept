@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - {{ user.full_name }}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body { background-color: #525659; padding: 40px 0; font-family: 'Segoe UI', sans-serif; }
+
+        /* A4 Paper Style */
+        .cv-container {
+            background: white;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 50px;
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            margin-top: 35px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-section { text-align: center; margin-bottom: 40px; }
+        .header-name { font-size: 2.5rem; font-weight: 800; color: #2c3e50; }
+        .header-contact { color: #666; font-size: 0.95rem; }
+
+        .skill-badge {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #dee2e6;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        /* TIMELINE STYLES (New) */
+        .timeline {
+            border-left: 2px solid #e9ecef;
+            margin-left: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        .timeline-item {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+
+        .timeline-dot {
+            width: 14px;
+            height: 14px;
+            background: #fff;
+            border: 3px solid #0d6efd;
+            border-radius: 50%;
+            position: absolute;
+            left: -33px;
+            top: 4px;
+        }
+
+        .timeline-title { font-weight: 700; color: #2c3e50; font-size: 1.05rem; }
+        .timeline-meta { color: #6c757d; font-size: 0.9rem; margin-top: 2px; }
+
+        /* Floating Action Bar */
+        .action-bar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .cv-container { box-shadow: none; margin: 0; padding: 0; width: 100%; max-width: 100%; }
+            .action-bar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="action-bar">
+        <button onclick="window.print()" class="btn btn-light shadow-sm fw-bold">
+            <i class="fas fa-print me-2"></i> Print CV
+        </button>
+        <button onclick="window.close()" class="btn btn-dark shadow-sm fw-bold">
+            <i class="fas fa-times me-2"></i> Close
+        </button>
+    </div>
+
+    <div class="cv-container">
+
+        <div class="header-section">
+            <div class="header-name">{{ user.full_name }}</div>
+            <div class="header-contact mt-2">
+                <i class="fas fa-envelope me-1"></i> {{ user.email }}
+                {% if user.mobile_number %} | <i class="fas fa-phone me-1"></i> {{ user.mobile_number }}{% endif %}
+                {% if profile.city %} | <i class="fas fa-map-marker-alt me-1"></i> {{ profile.city }}{% endif %}
+            </div>
+            <div class="mt-3">
+                <span class="badge bg-dark fs-6 fw-normal px-4 py-2 text-uppercase letter-spacing-1">
+                    {{ user.get_ca_status_display }}
+                </span>
+            </div>
+        </div>
+
+        <div class="section-title">Academic Progression</div>
+        <div class="timeline">
+
+            {% if profile.final_attempts %}
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-title">CA Final</div>
+                <div class="timeline-meta">
+                    <i class="fas fa-check-circle text-success me-1"></i>
+                    Cleared in <strong>{{ profile.final_attempts }}</strong> Attempt(s)
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="timeline-item">
+                <div class="timeline-dot" style="border-color: {% if profile.inter_attempts_g2 %}#0d6efd{% else %}#adb5bd{% endif %}"></div>
+                <div class="timeline-title">CA Intermediate (Group 2)</div>
+                <div class="timeline-meta">
+                    {% if profile.inter_attempts_g2 %}
+                        Cleared in <strong>{{ profile.inter_attempts_g2 }}</strong> Attempt(s)
+                    {% else %}
+                        <span class="text-muted">Not yet cleared / In Progress</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot" style="border-color: {% if profile.inter_attempts_g1 %}#0d6efd{% else %}#adb5bd{% endif %}"></div>
+                <div class="timeline-title">CA Intermediate (Group 1)</div>
+                <div class="timeline-meta">
+                    {% if profile.inter_attempts_g1 %}
+                        Cleared in <strong>{{ profile.inter_attempts_g1 }}</strong> Attempt(s)
+                    {% else %}
+                        <span class="text-muted">Not yet cleared / In Progress</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-title">CA Foundation</div>
+                <div class="timeline-meta">
+                    Cleared in <strong>{{ profile.foundation_attempts|default:"1" }}</strong> Attempt(s)
+                </div>
+            </div>
+
+        </div>
+
+        {% if profile.articleship_firm %}
+        <div class="section-title">Articleship Experience</div>
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-1">{{ profile.articleship_firm }}</h5>
+            </div>
+            <p class="text-primary fw-bold small mb-2 text-uppercase">Articleship Trainee</p>
+            <p class="text-muted">{{ profile.work_description|default:"Completed mandatory articleship training with exposure in Statutory Audit, Tax Audit, and GST Filings." }}</p>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="section-title">Domain Expertise</div>
+                <div>
+                    {% for domain in profile.domain_exposure.all %}
+                        <span class="skill-badge bg-primary bg-opacity-10 text-primary border-primary border-opacity-25">
+                            {{ domain.domain_name }}
+                        </span>
+                    {% empty %}
+                        <span class="text-muted small">No specific domains listed.</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="section-title">Software Proficiency</div>
+                <div>
+                    {% for skill in profile.software_skills.all %}
+                        <span class="skill-badge">
+                            {{ skill.skill_name }}
+                        </span>
+                    {% empty %}
+                        <span class="text-muted small">No software skills listed.</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        {% if profile.bio %}
+        <div class="section-title">Professional Summary</div>
+        <p class="text-muted" style="line-height: 1.6;">{{ profile.bio }}</p>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Registration | Percept Placements</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --navy: #111827;
+            --navy-mid: #1e293b;
+            --blue: #2563eb;
+            --blue-light: #3b82f6;
+            --cream: #f3f6f9;
+            --offwhite: #f8fafc;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: #475569;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 5vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .brand-logo { max-height: 38px; width: auto; object-fit: contain; }
+        .nav-brand-text { font-weight: 800; font-size: 1.15rem; color: var(--navy); text-transform: uppercase; letter-spacing: -0.5px; }
+        .nav-back { color: var(--muted); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: 0.2s; }
+        .nav-back:hover { color: var(--blue); }
+
+        /* ── MAIN LAYOUT ── */
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 15px;
+        }
+
+        .reg-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+            background: #fff;
+        }
+
+        /* ── SIDEBAR ── */
+        .reg-sidebar {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+            color: white;
+            padding: 50px 40px;
+            position: relative;
+        }
+        .reg-sidebar::before {
+            content: ''; position: absolute; top: -100px; left: -50px;
+            width: 300px; height: 300px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* ── FORM STYLES ── */
+        .form-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--navy);
+            margin-bottom: 6px;
+        }
+
+        .form-control, .form-select {
+            padding: 12px 16px;
+            border-radius: 10px;
+            background-color: var(--offwhite);
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+            color: var(--navy);
+            transition: all 0.2s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #fff;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn-primary-custom {
+            background: var(--blue);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .btn-primary-custom:hover {
+            background: var(--blue-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+        }
+
+        /* Smooth toggle for dynamic rows */
+        .dynamic-row {
+            transition: opacity 0.4s ease, max-height 0.4s ease;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a class="nav-brand" href="/">
+            <img src="{% static 'img/percept_logo.png' %}" alt="Logo" class="brand-logo" onerror="this.style.display='none';">
+            <span class="nav-brand-text">Percept Placements</span>
+        </a>
+        <a href="{% url 'login' %}" class="nav-back"><i class="fas fa-arrow-left me-2"></i>Back to Login</a>
+    </nav>
+
+    <div class="main-wrapper">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-10 col-lg-11">
+                    <div class="reg-card">
+                        <div class="row g-0">
+
+                            <div class="col-md-5 reg-sidebar d-none d-md-flex flex-column justify-content-center">
+                                <div class="position-relative z-1">
+                                    <div class="mb-4 bg-white bg-opacity-10 d-inline-flex p-3 rounded-circle">
+                                        <i class="fas fa-user-graduate fs-1 text-white"></i>
+                                    </div>
+                                    <h2 class="fw-bold text-white mb-3">Accelerate Your Career</h2>
+                                    <p class="mb-5 opacity-75" style="font-size: 1.05rem; line-height: 1.6;">
+                                        Join India's premier finance network. Connect with top CA firms, multinational corporations, and global consulting groups.
+                                    </p>
+
+                                    <div class="d-flex align-items-center mb-4">
+                                        <i class="fas fa-check-circle text-primary fs-4 me-3" style="color: #60a5fa !important;"></i>
+                                        <span class="text-white fw-medium">Exclusive Premium Roles</span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-4">
+                                        <i class="fas fa-check-circle text-primary fs-4 me-3" style="color: #60a5fa !important;"></i>
+                                        <span class="text-white fw-medium">Direct Mentorship Focus</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-primary fs-4 me-3" style="color: #60a5fa !important;"></i>
+                                        <span class="text-white fw-medium">Verified Employers Only</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-7 p-4 p-md-5">
+                                <div class="mb-4 pb-2 border-bottom">
+                                    <h3 class="fw-bold text-dark mb-1" style="color: var(--navy) !important;">Create Candidate Profile</h3>
+                                    <p class="text-muted small mb-0">Fill in your details to get started.</p>
+                                </div>
+
+                                <form method="POST" id="candidateForm">
+                                    {% csrf_token %}
+
+                                    {% for field in form %}
+                                    <div class="mb-4 dynamic-row" id="row_{{ field.name }}">
+                                        <label class="form-label" for="{{ field.id_for_label }}">
+                                            {{ field.label }} {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                                        </label>
+
+                                        {{ field }}
+
+                                        {% if field.errors %}
+                                            <div class="text-danger mt-2 small fw-medium">
+                                                <i class="fas fa-exclamation-circle me-1"></i> {{ field.errors|striptags }}
+                                            </div>
+                                        {% endif %}
+
+                                        {% if field.help_text %}
+                                            <div class="text-muted mt-1" style="font-size: 0.75rem;">{{ field.help_text }}</div>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+
+                                    <div class="mt-5">
+                                        <button type="submit" class="btn-primary-custom w-100 shadow-sm">
+                                            Register & Proceed <i class="fas fa-arrow-right ms-2"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // 1. AUTOMATIC BOOTSTRAP STYLING FOR DJANGO FIELDS
+            // This ensures all inputs and selects look beautiful without changing forms.py
+            const formInputs = document.querySelectorAll('#candidateForm input, #candidateForm select, #candidateForm textarea');
+            formInputs.forEach(input => {
+                if (input.type !== 'checkbox' && input.type !== 'radio' && input.type !== 'hidden') {
+                    if (input.tagName === 'SELECT') {
+                        input.classList.add('form-select');
+                    } else {
+                        input.classList.add('form-control');
+                    }
+                }
+            });
+
+            // 2. DYNAMIC FIELD TOGGLE LOGIC
+            const statusField = document.getElementById('id_ca_status');
+            const groupRow = document.getElementById('row_inter_group_status');
+            const groupField = document.getElementById('id_inter_group_status');
+
+            if (statusField && groupRow && groupField) {
+
+                function toggleGroupField() {
+                    if (statusField.value === 'INTERMEDIATE') {
+                        groupRow.style.display = 'block';
+                        groupField.required = true;
+
+                        // Smooth fade in
+                        setTimeout(() => {
+                            groupRow.style.opacity = '1';
+                            groupRow.style.maxHeight = '150px';
+                        }, 10);
+                    } else {
+                        // Smooth fade out
+                        groupRow.style.opacity = '0';
+                        groupRow.style.maxHeight = '0px';
+
+                        setTimeout(() => {
+                            groupRow.style.display = 'none';
+                            groupField.required = false;
+                            groupField.value = "";
+                        }, 400); // match transition time
+                    }
+                }
+
+                // Initial setup for animation
+                groupRow.style.opacity = '0';
+                groupRow.style.maxHeight = '0px';
+
+                // Run on load
+                toggleGroupField();
+
+                // Run on change
+                statusField.addEventListener('change', toggleGroupField);
+            }
+        });
+    </script>
+
+</body>
+</html>
